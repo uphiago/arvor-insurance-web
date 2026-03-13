@@ -25,9 +25,11 @@ export async function POST(request: Request) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        createdAt: new Date().toLocaleString("pt-BR", {
-          timeZone: "America/Sao_Paulo",
-        }),
+        createdAt: (() => {
+          const now = new Date(Date.now() - 3 * 60 * 60 * 1000); // BRT = UTC-3
+          const p = (n: number) => String(n).padStart(2, "0");
+          return `${p(now.getUTCDate())}/${p(now.getUTCMonth() + 1)}/${now.getUTCFullYear()} ${p(now.getUTCHours())}:${p(now.getUTCMinutes())}`;
+        })(),
         source: "arvor-site",
         ...payload,
       }),

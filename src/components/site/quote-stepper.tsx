@@ -582,17 +582,26 @@ export function QuoteStepper() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  type="button"
-                  onClick={handleQuoteRequest}
-                  disabled={submitStatus === "loading"}
-                  variant="primary"
-                >
-                  {submitStatus === "loading"
-                    ? "Enviando..."
-                    : "Solicitar cotação"}
-                </Button>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setStep(2)}
+                  >
+                    Voltar
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handleQuoteRequest}
+                    disabled={submitStatus === "loading"}
+                    variant="primary"
+                  >
+                    {submitStatus === "loading"
+                      ? "Enviando..."
+                      : "Solicitar cotação"}
+                  </Button>
+                </div>
                 <a
                   href={toWhatsappUrl()}
                   target="_blank"
@@ -612,15 +621,6 @@ export function QuoteStepper() {
                   {submitMessage}
                 </p>
               )}
-
-              <Button
-                type="button"
-                onClick={() => setStep(2)}
-                variant="outline"
-                className="border-0 bg-transparent p-0 text-sm font-semibold text-[#2f3c4c]/70 underline hover:bg-transparent"
-              >
-                Voltar para editar dados
-              </Button>
             </div>
           )
         ) : null}
