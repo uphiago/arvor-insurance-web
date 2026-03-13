@@ -262,6 +262,8 @@ export function QuoteStepper() {
 
   async function handleQuoteRequest() {
     if (!stepOneData || !stepTwoData) {
+      setSubmitStatus("error");
+      setSubmitMessage("Dados incompletos. Volte e preencha todos os campos.");
       return;
     }
 
