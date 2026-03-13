@@ -524,7 +524,7 @@ export function QuoteStepper() {
           submitStatus === "success" ? (
             <div
               key="step-3-success"
-              className="animate-step-in flex flex-col items-center gap-5 py-6 text-center"
+              className="animate-step-in flex min-h-[420px] flex-col items-center justify-center gap-5 text-center"
             >
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#8fa286] text-3xl text-white">
                 ✓

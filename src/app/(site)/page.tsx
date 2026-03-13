@@ -274,16 +274,16 @@ export default function HomePage() {
         <QuoteStepper />
       </main>
 
-      <footer className="border-t border-[#2f3c4c]/15 bg-[#f4ede0] py-10">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-5 text-sm md:px-8">
+      <footer className="border-t border-[#2f3c4c]/15 bg-[#f4ede0] py-6">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-5 text-sm md:flex-row md:items-center md:justify-between md:px-8">
           <p className="font-semibold">
             Arvor Insurance · Corretora Sustentável
           </p>
           <p>
-            Contato para cotações: <CopyEmail email={ARVOR_CONTACT_EMAIL} />
+            Contato: <CopyEmail email={ARVOR_CONTACT_EMAIL} />
           </p>
-          <p className="text-[#2f3c4c]/70">
-            Atendimento nacional para PF, Coletivo por Adesão, PJ e MEI.
+          <p className="text-[#2f3c4c]/60">
+            Atendimento nacional · PF, Coletivo, PJ e MEI
           </p>
         </div>
       </footer>
