@@ -1,5 +1,3 @@
-"use client";
-
 import { QuoteStepper } from "@/components/site/quote-stepper";
 import { ARVOR_CONTACT_EMAIL, ARVOR_WHATSAPP_MESSAGE } from "@/lib/arvor";
 
@@ -51,7 +49,7 @@ export default function HomePage() {
             href={toWhatsappUrl()}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full border border-[#8fa286]/80 bg-[#8fa286]/80 px-4 py-2 text-sm font-semibold text-[#2f3c4c] shadow-sm transition hover:bg-[#7c8f75]"
+            className="cursor-pointer rounded-full border border-[#8fa286]/80 bg-[#8fa286]/80 px-4 py-2 text-sm font-semibold text-[#2f3c4c] shadow-sm transition hover:bg-[#7c8f75]"
           >
             Falar com Especialista
           </a>

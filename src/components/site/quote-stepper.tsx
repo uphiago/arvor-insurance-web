@@ -452,8 +452,8 @@ export function QuoteStepper() {
               </p>
             </div>
 
-            <div>
-              <p className="text-sm font-semibold">Modalidade</p>
+            <fieldset>
+              <legend className="text-sm font-semibold">Modalidade</legend>
               <div className="mt-2 grid gap-3 md:grid-cols-2">
                 {MODALITIES.map((item) => (
                   <label
@@ -482,7 +482,7 @@ export function QuoteStepper() {
               <p className="mt-1 min-h-4 text-xs text-[#c5874a]">
                 {stepTwoForm.formState.errors.modality?.message ?? ""}
               </p>
-            </div>
+            </fieldset>
 
             <div className="flex flex-wrap gap-3">
               <Button
@@ -554,7 +554,7 @@ export function QuoteStepper() {
                 href={toWhatsappUrl()}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c]"
+                className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c]"
               >
                 Falar com especialista
               </a>

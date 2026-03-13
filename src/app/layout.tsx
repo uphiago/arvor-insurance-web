@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s | Arvor Insurance",
   },
   description:
-    "Corretora sustentavel especializada em planos de saude empresarial e seguro de vida.",
+    "Corretora sustentável especializada em planos de saúde empresarial e seguro de vida.",
 };
 
 export default function RootLayout({
