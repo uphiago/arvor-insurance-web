@@ -215,7 +215,7 @@ export function QuoteStepper() {
     mode: "onChange",
     defaultValues: {
       state: "",
-      modality: undefined,
+      modality: "",
     },
   });
 
@@ -279,7 +279,6 @@ export function QuoteStepper() {
           state: stepTwoData.state,
           region: stepTwoData.region,
           modality: modalityLabel(stepTwoData.modality),
-          documents: docs,
         }),
       });
 

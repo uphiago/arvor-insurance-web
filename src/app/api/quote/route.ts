@@ -7,7 +7,6 @@ const quoteRequestSchema = z.object({
   state: z.string().min(2),
   region: z.string().min(2),
   modality: z.string().min(2),
-  documents: z.array(z.string()).min(1),
 });
 
 export async function POST(request: Request) {
