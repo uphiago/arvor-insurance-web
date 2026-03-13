@@ -31,6 +31,12 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${raleway.variable} antialiased`}
       >
+        <a
+          href="#conteudo-principal"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-[#2f3c4c] focus:px-3 focus:py-2 focus:text-[#e5ddc9]"
+        >
+          Pular para conteúdo principal
+        </a>
         {children}
       </body>
     </html>

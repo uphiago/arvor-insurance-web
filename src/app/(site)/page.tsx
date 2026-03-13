@@ -307,17 +307,32 @@ export default function HomePage() {
           <a href="#inicio" className="text-lg font-semibold tracking-wide">
             Arvor Insurance
           </a>
-          <nav className="hidden items-center gap-5 text-sm md:flex">
-            <a href="#sobre" className="hover:text-[#8fa286]">
+          <nav
+            className="hidden items-center gap-5 text-sm md:flex"
+            aria-label="Navegação principal"
+          >
+            <a
+              href="#sobre"
+              className="hover:text-[#8fa286] focus-visible:rounded-sm"
+            >
               Sobre
             </a>
-            <a href="#sustentavel" className="hover:text-[#8fa286]">
+            <a
+              href="#sustentavel"
+              className="hover:text-[#8fa286] focus-visible:rounded-sm"
+            >
               Projeto Sustentável
             </a>
-            <a href="#produtos" className="hover:text-[#8fa286]">
+            <a
+              href="#produtos"
+              className="hover:text-[#8fa286] focus-visible:rounded-sm"
+            >
               Produtos
             </a>
-            <a href="#autoatendimento" className="hover:text-[#8fa286]">
+            <a
+              href="#autoatendimento"
+              className="hover:text-[#8fa286] focus-visible:rounded-sm"
+            >
               Cotar
             </a>
           </nav>
@@ -332,7 +347,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main>
+      <main id="conteudo-principal">
         <section
           id="inicio"
           className="mx-auto w-full max-w-6xl px-5 py-16 md:px-8 md:py-24"
@@ -734,6 +749,8 @@ export default function HomePage() {
                 </div>
                 {submitMessage ? (
                   <p
+                    role="status"
+                    aria-live="polite"
                     className={`text-sm ${
                       submitStatus === "error"
                         ? "text-[#c5874a]"
