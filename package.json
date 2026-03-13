@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "test -e .git && husky || true"
   },
   "dependencies": {
     "next": "16.1.6",
