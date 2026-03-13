@@ -25,7 +25,9 @@ export async function POST(request: Request) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        createdAt: new Date().toISOString(),
+        createdAt: new Date().toLocaleString("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+        }),
         source: "arvor-site",
         ...payload,
       }),
