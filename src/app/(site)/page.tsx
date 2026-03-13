@@ -9,6 +9,7 @@ import {
 } from "@/lib/arvor";
 import { CopyEmail } from "@/components/ui/copy-email";
 import { SmoothLink } from "@/components/ui/smooth-link";
+import { MobileNav } from "@/components/site/mobile-nav";
 
 export default function HomePage() {
   return (
@@ -50,14 +51,17 @@ export default function HomePage() {
               Cotar
             </SmoothLink>
           </nav>
-          <a
-            href={toWhatsappUrl()}
-            target="_blank"
-            rel="noreferrer"
-            className="cursor-pointer rounded-full border border-[#8fa286]/80 bg-[#8fa286]/80 px-4 py-2 text-sm font-semibold text-[#2f3c4c] shadow-sm transition hover:bg-[#7c8f75]"
-          >
-            Falar com Especialista
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href={toWhatsappUrl()}
+              target="_blank"
+              rel="noreferrer"
+              className="cursor-pointer rounded-full border border-[#8fa286]/80 bg-[#8fa286]/80 px-4 py-2 text-sm font-semibold text-[#2f3c4c] shadow-sm transition hover:bg-[#7c8f75]"
+            >
+              Falar com Especialista
+            </a>
+            <MobileNav />
+          </div>
         </div>
       </header>
 
