@@ -603,6 +603,7 @@ export function QuoteStepper() {
                   onClick={handleQuoteRequest}
                   disabled={submitStatus === "loading"}
                   variant="primary"
+                  className="min-w-44"
                 >
                   {submitStatus === "loading"
                     ? "Enviando..."
