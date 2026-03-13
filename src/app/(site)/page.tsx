@@ -8,46 +8,47 @@ import {
   toWhatsappUrl,
 } from "@/lib/arvor";
 import { CopyEmail } from "@/components/ui/copy-email";
+import { SmoothLink } from "@/components/ui/smooth-link";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,#f7f2e8_0%,#e5ddc9_42%,#d9d1bc_100%)] text-[#2f3c4c]">
       <header className="sticky top-0 z-20 border-b border-[#ae905e]/35 bg-[#e5ddc9]/55 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 md:px-8">
-          <a
-            href="#inicio"
+          <SmoothLink
+            to="inicio"
             className="cursor-pointer text-lg font-semibold tracking-wide"
           >
             Arvor Insurance
-          </a>
+          </SmoothLink>
           <nav
             className="hidden items-center gap-5 text-sm md:flex"
             aria-label="Navegação principal"
           >
-            <a
-              href="#sobre"
+            <SmoothLink
+              to="sobre"
               className="cursor-pointer hover:text-[#8fa286] focus-visible:rounded-sm"
             >
               Sobre
-            </a>
-            <a
-              href="#sustentavel"
+            </SmoothLink>
+            <SmoothLink
+              to="sustentavel"
               className="cursor-pointer hover:text-[#8fa286] focus-visible:rounded-sm"
             >
               Projeto Sustentável
-            </a>
-            <a
-              href="#produtos"
+            </SmoothLink>
+            <SmoothLink
+              to="produtos"
               className="cursor-pointer hover:text-[#8fa286] focus-visible:rounded-sm"
             >
               Produtos
-            </a>
-            <a
-              href="#autoatendimento"
+            </SmoothLink>
+            <SmoothLink
+              to="autoatendimento"
               className="cursor-pointer hover:text-[#8fa286] focus-visible:rounded-sm"
             >
               Cotar
-            </a>
+            </SmoothLink>
           </nav>
           <a
             href={toWhatsappUrl()}
@@ -82,12 +83,12 @@ export default function HomePage() {
                   operação.
                 </p>
                 <div className="animate-hero-item [animation-delay:360ms] flex flex-col gap-3 sm:flex-row">
-                  <a
-                    href="#autoatendimento"
+                  <SmoothLink
+                    to="autoatendimento"
                     className="inline-flex items-center justify-center rounded-full bg-[#2f3c4c] px-6 py-3 text-center font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
                   >
                     Cotar agora
-                  </a>
+                  </SmoothLink>
                   <a
                     href={toWhatsappUrl()}
                     target="_blank"
