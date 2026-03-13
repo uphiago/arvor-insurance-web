@@ -14,6 +14,8 @@ export async function POST(request: Request) {
     const payload = quoteRequestSchema.parse(await request.json());
     const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
 
+    console.log("[quote] webhookUrl present:", !!webhookUrl);
+
     if (!webhookUrl) {
       return Response.json(
         { error: "GOOGLE_SHEETS_WEBHOOK_URL não configurada." },
@@ -21,18 +23,29 @@ export async function POST(request: Request) {
       );
     }
 
+    const body = JSON.stringify({
+      createdAt: new Date().toISOString(),
+      source: "arvor-site",
+      ...payload,
+    });
+
+    console.log("[quote] sending to webhook:", body);
+
     const response = await fetch(webhookUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        createdAt: new Date().toISOString(),
-        source: "arvor-site",
-        ...payload,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body,
       cache: "no-store",
+      redirect: "follow",
     });
+
+    const responseText = await response.text();
+    console.log(
+      "[quote] webhook status:",
+      response.status,
+      "body:",
+      responseText,
+    );
 
     if (!response.ok) {
       return Response.json(
@@ -42,7 +55,8 @@ export async function POST(request: Request) {
     }
 
     return Response.json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error("[quote] error:", err);
     return Response.json(
       { error: "Não foi possível processar a solicitação." },
       { status: 400 },
