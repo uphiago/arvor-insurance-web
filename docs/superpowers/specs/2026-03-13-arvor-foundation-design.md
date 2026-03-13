@@ -3,6 +3,7 @@
 **Date:** 2026-03-13
 **Status:** Approved for implementation
 **Related docs:**
+
 - `docs/briefing-tecnico-site-institucional-v1.md`
 - `docs/decisions/2026-03-13-technical-foundation.md`
 
@@ -223,13 +224,13 @@ This documentation is intended to support both human contributors and future AI-
 
 ## Risks and Controls
 
-| Risk | Control |
-| --- | --- |
-| CMS scope expands into quote logic too early | Keep quote behavior in code and document the boundary |
-| Embedded Studio leaks into public layouts | Use route groups and isolated layouts from day one |
-| Scaffold complexity grows before UI work begins | Defer Visual Editing and advanced editorial features |
+| Risk                                                      | Control                                                   |
+| --------------------------------------------------------- | --------------------------------------------------------- |
+| CMS scope expands into quote logic too early              | Keep quote behavior in code and document the boundary     |
+| Embedded Studio leaks into public layouts                 | Use route groups and isolated layouts from day one        |
+| Scaffold complexity grows before UI work begins           | Defer Visual Editing and advanced editorial features      |
 | Styling becomes generic due to component library defaults | Theme and override shadcn/ui instead of shipping defaults |
-| Future contributors re-decide the stack repeatedly | Store decisions and plans inside `docs/` |
+| Future contributors re-decide the stack repeatedly        | Store decisions and plans inside `docs/`                  |
 
 ---
 

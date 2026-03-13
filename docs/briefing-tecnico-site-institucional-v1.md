@@ -13,15 +13,15 @@
 
 A Arvor Insurance é uma corretora especializada em planos de saúde empresarial e seguro de vida, com um diferencial de propósito: parte dos resultados da corretora é direcionada a iniciativas socioambientais, reforçando o conceito de **Corredora Sustentável**.
 
-| Item | Detalhe |
-| --- | --- |
-| Nome comercial | Arvor Insurance |
-| Conceito | Corredora Sustentável |
-| Segmentos | Plano de Saúde Empresarial · Seguro de Vida |
-| ONGs parceiras | SOS Mata Atlântica · ONG ZOE |
-| Abrangência | Nacional |
-| Modalidades | PF (Pessoa Física) · Coletivo por Adesão · PJ · MEI |
-| Contato cotações | dimitricontro@arvorin.com.br |
+| Item             | Detalhe                                             |
+| ---------------- | --------------------------------------------------- |
+| Nome comercial   | Arvor Insurance                                     |
+| Conceito         | Corredora Sustentável                               |
+| Segmentos        | Plano de Saúde Empresarial · Seguro de Vida         |
+| ONGs parceiras   | SOS Mata Atlântica · ONG ZOE                        |
+| Abrangência      | Nacional                                            |
+| Modalidades      | PF (Pessoa Física) · Coletivo por Adesão · PJ · MEI |
+| Contato cotações | dimitricontro@arvorin.com.br                        |
 
 ---
 
@@ -35,22 +35,22 @@ O símbolo da marca é uma árvore minimalista, que reforça os conceitos de cre
 
 Usar exclusivamente as cores abaixo. Não utilizar cores fora desta paleta.
 
-| Hex | Uso sugerido |
-| --- | --- |
+| Hex       | Uso sugerido                                              |
+| --------- | --------------------------------------------------------- |
 | `#2f3c4c` | Azul escuro — cor primária, textos, fundos institucionais |
-| `#8fa286` | Verde — cor secundária, botões, acentos sustentáveis |
-| `#ae905e` | Dourado — destaques premium, ícones, bordas |
-| `#c5874a` | Laranja — chamadas de ação secundárias, badges |
-| `#e5ddc9` | Bege — fundos suaves, cards, seções alternadas |
+| `#8fa286` | Verde — cor secundária, botões, acentos sustentáveis      |
+| `#ae905e` | Dourado — destaques premium, ícones, bordas               |
+| `#c5874a` | Laranja — chamadas de ação secundárias, badges            |
+| `#e5ddc9` | Bege — fundos suaves, cards, seções alternadas            |
 
 ### 2.3 Tipografia
 
 As fontes são parte central da identidade. Devem ser carregadas via Google Fonts ou Fontshare. Se Sansation não estiver disponível no Google Fonts, usar Raleway como fallback para títulos.
 
-| Aplicação | Fonte oficial | Fallback |
-| --- | --- | --- |
-| Títulos (H1-H3) | Sansation | Raleway |
-| Corpo, labels, UI | Montserrat | Inter / Open Sans |
+| Aplicação         | Fonte oficial | Fallback          |
+| ----------------- | ------------- | ----------------- |
+| Títulos (H1-H3)   | Sansation     | Raleway           |
+| Corpo, labels, UI | Montserrat    | Inter / Open Sans |
 
 ### 2.4 Direção Estética
 
@@ -66,17 +66,17 @@ As fontes são parte central da identidade. Devem ser carregadas via Google Font
 
 O site será uma **single-page application (SPA)** ou experiência multi-seção com scroll suave, composto pelas seções abaixo na ordem indicada:
 
-| # | Seção | Conteúdo / Função |
-| --- | --- | --- |
-| 1 | Header / Navbar | Logo Arvor + navegação por âncoras + botão CTA `Falar com Especialista` |
-| 2 | Hero | Headline principal + subheadline + 2 CTAs: `Cotar agora` e `Falar com especialista` |
-| 3 | Sobre a Arvor | Missão, proposta de valor, diferenciais da corretora |
-| 4 | Projeto Sustentável | Propósito socioambiental, parceria SOS Mata Atlântica e ONG ZOE, percentual do FCF doado |
-| 5 | Produtos | Cards: Plano de Saúde Empresarial · Seguro de Vida · Coletivo por Adesão |
-| 6 | Como funciona | Passo a passo visual: Cotar → Escolher → Contratar |
-| 7 | Autoatendimento | Fluxo de cotação em 3 steps |
-| 8 | Falar com Especialista | CTA para WhatsApp / integração Arvor (consulta personalizada) |
-| 9 | Footer | Links, e-mail de contato, redes sociais, aviso legal |
+| #   | Seção                  | Conteúdo / Função                                                                        |
+| --- | ---------------------- | ---------------------------------------------------------------------------------------- |
+| 1   | Header / Navbar        | Logo Arvor + navegação por âncoras + botão CTA `Falar com Especialista`                  |
+| 2   | Hero                   | Headline principal + subheadline + 2 CTAs: `Cotar agora` e `Falar com especialista`      |
+| 3   | Sobre a Arvor          | Missão, proposta de valor, diferenciais da corretora                                     |
+| 4   | Projeto Sustentável    | Propósito socioambiental, parceria SOS Mata Atlântica e ONG ZOE, percentual do FCF doado |
+| 5   | Produtos               | Cards: Plano de Saúde Empresarial · Seguro de Vida · Coletivo por Adesão                 |
+| 6   | Como funciona          | Passo a passo visual: Cotar → Escolher → Contratar                                       |
+| 7   | Autoatendimento        | Fluxo de cotação em 3 steps                                                              |
+| 8   | Falar com Especialista | CTA para WhatsApp / integração Arvor (consulta personalizada)                            |
+| 9   | Footer                 | Links, e-mail de contato, redes sociais, aviso legal                                     |
 
 ---
 
