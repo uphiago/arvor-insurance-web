@@ -550,16 +550,18 @@ export function QuoteStepper() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button
-                type="button"
-                onClick={handleQuoteRequest}
-                disabled={submitStatus === "loading"}
-                variant="primary"
-              >
-                {submitStatus === "loading"
-                  ? "Enviando..."
-                  : "Solicitar cotação"}
-              </Button>
+              {submitStatus !== "success" && (
+                <Button
+                  type="button"
+                  onClick={handleQuoteRequest}
+                  disabled={submitStatus === "loading"}
+                  variant="primary"
+                >
+                  {submitStatus === "loading"
+                    ? "Enviando..."
+                    : "Solicitar cotação"}
+                </Button>
+              )}
               <a
                 href={toWhatsappUrl()}
                 target="_blank"
