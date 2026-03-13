@@ -320,14 +320,15 @@ export function QuoteStepper() {
       <div className="mt-8 grid grid-cols-3 gap-2">
         {STEP_LABELS.map((label, index) => {
           const currentStep = index + 1;
-          const done = step > currentStep;
-          const active = step === currentStep;
+          const allDone = submitStatus === "success";
+          const done = allDone || step > currentStep;
+          const active = !allDone && step === currentStep;
 
           return (
             <div
               key={label}
               aria-current={active ? "step" : undefined}
-              className={`flex h-14 items-center justify-center rounded-xl border px-3 py-2 text-center text-xs font-semibold md:text-sm ${
+              className={`flex h-14 items-center justify-center rounded-xl border px-3 py-2 text-center text-xs font-semibold transition-all duration-300 md:text-sm ${
                 done
                   ? "border-[#8fa286] bg-[#8fa286] text-[#2f3c4c]"
                   : active
@@ -345,7 +346,12 @@ export function QuoteStepper() {
       <div className="mt-2 h-1 overflow-hidden rounded-full bg-[#2f3c4c]/10">
         <div
           className="h-full rounded-full bg-[#8fa286] transition-all duration-500 ease-out"
-          style={{ width: `${((step - 1) / (STEP_LABELS.length - 1)) * 100}%` }}
+          style={{
+            width:
+              submitStatus === "success"
+                ? "100%"
+                : `${((step - 1) / (STEP_LABELS.length - 1)) * 100}%`,
+          }}
         />
       </div>
 
@@ -510,47 +516,73 @@ export function QuoteStepper() {
         ) : null}
 
         {step === 3 && stepOneData && stepTwoData ? (
-          <div key="step-3" className="animate-step-in space-y-5">
-            <div className="grid gap-3 rounded-2xl bg-[#fffdf8] p-4 text-sm md:grid-cols-2">
-              <p>
-                <strong>Nome:</strong> {stepOneData.fullName}
-              </p>
-              <p>
-                <strong>Telefone:</strong> {stepOneData.phone}
-              </p>
-              <p>
-                <strong>E-mail:</strong> {stepOneData.email}
-              </p>
-              <p>
-                <strong>Estado:</strong> {stepTwoData.state}
-              </p>
-              <p className="md:col-span-2">
-                <strong>Modalidade:</strong>{" "}
-                {modalityLabel(stepTwoData.modality)}
-              </p>
+          submitStatus === "success" ? (
+            <div
+              key="step-3-success"
+              className="animate-step-in flex flex-col items-center gap-5 py-6 text-center"
+            >
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#8fa286] text-3xl text-white">
+                ✓
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold">Solicitação enviada!</h3>
+                <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#2f3c4c]/75">
+                  Nossa equipe retornará em até 24h úteis com as melhores opções
+                  para o seu perfil.
+                </p>
+              </div>
+              <a
+                href={toWhatsappUrl()}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c] transition hover:bg-[#8fa286]/30"
+              >
+                Falar com especialista
+              </a>
             </div>
+          ) : (
+            <div key="step-3" className="animate-step-in space-y-5">
+              <div className="grid gap-3 rounded-2xl bg-[#fffdf8] p-4 text-sm md:grid-cols-2">
+                <p>
+                  <strong>Nome:</strong> {stepOneData.fullName}
+                </p>
+                <p>
+                  <strong>Telefone:</strong> {stepOneData.phone}
+                </p>
+                <p>
+                  <strong>E-mail:</strong> {stepOneData.email}
+                </p>
+                <p>
+                  <strong>Estado:</strong> {stepTwoData.state}
+                </p>
+                <p className="md:col-span-2">
+                  <strong>Modalidade:</strong>{" "}
+                  {modalityLabel(stepTwoData.modality)}
+                </p>
+              </div>
 
-            <div className="rounded-2xl bg-[#fffdf8] p-4">
-              <h3 className="text-lg font-semibold">Documentos necessários</h3>
-              <ul className="mt-3 list-inside list-disc space-y-1 text-sm">
-                {docs.map((doc) => (
-                  <li key={doc}>{doc}</li>
-                ))}
-              </ul>
-            </div>
+              <div className="rounded-2xl bg-[#fffdf8] p-4">
+                <h3 className="text-lg font-semibold">
+                  Documentos necessários
+                </h3>
+                <ul className="mt-3 list-inside list-disc space-y-1 text-sm">
+                  {docs.map((doc) => (
+                    <li key={doc}>{doc}</li>
+                  ))}
+                </ul>
+              </div>
 
-            <div className="rounded-2xl border border-[#ae905e]/60 bg-[#ae905e]/15 p-4 text-sm">
-              <p>
-                Após a solicitação, nossa equipe confirma o recebimento e
-                orienta o envio dos documentos necessários.
-              </p>
-              <p className="mt-1 text-[#2f3c4c]/80">
-                Prazo de retorno: até 24h úteis.
-              </p>
-            </div>
+              <div className="rounded-2xl border border-[#ae905e]/60 bg-[#ae905e]/15 p-4 text-sm">
+                <p>
+                  Após a solicitação, nossa equipe confirma o recebimento e
+                  orienta o envio dos documentos necessários.
+                </p>
+                <p className="mt-1 text-[#2f3c4c]/80">
+                  Prazo de retorno: até 24h úteis.
+                </p>
+              </div>
 
-            <div className="flex flex-wrap gap-3">
-              {submitStatus !== "success" && (
+              <div className="flex flex-wrap gap-3">
                 <Button
                   type="button"
                   onClick={handleQuoteRequest}
@@ -561,37 +593,36 @@ export function QuoteStepper() {
                     ? "Enviando..."
                     : "Solicitar cotação"}
                 </Button>
-              )}
-              <a
-                href={toWhatsappUrl()}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c]"
-              >
-                Falar com especialista
-              </a>
-            </div>
-            <p
-              role="status"
-              aria-live="polite"
-              className={`min-h-5 text-sm ${
-                submitStatus === "error"
-                  ? "text-[#c5874a]"
-                  : "text-[#2f3c4c]/80"
-              }`}
-            >
-              {submitMessage}
-            </p>
+                <a
+                  href={toWhatsappUrl()}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c] transition hover:bg-[#8fa286]/30"
+                >
+                  Falar com especialista
+                </a>
+              </div>
 
-            <Button
-              type="button"
-              onClick={() => setStep(2)}
-              variant="outline"
-              className="border-0 bg-transparent p-0 text-sm font-semibold text-[#2f3c4c]/70 underline hover:bg-transparent"
-            >
-              Voltar para editar dados
-            </Button>
-          </div>
+              {submitStatus === "error" && (
+                <p
+                  role="status"
+                  aria-live="polite"
+                  className="text-sm text-[#c5874a]"
+                >
+                  {submitMessage}
+                </p>
+              )}
+
+              <Button
+                type="button"
+                onClick={() => setStep(2)}
+                variant="outline"
+                className="border-0 bg-transparent p-0 text-sm font-semibold text-[#2f3c4c]/70 underline hover:bg-transparent"
+              >
+                Voltar para editar dados
+              </Button>
+            </div>
+          )
         ) : null}
       </div>
     </section>
