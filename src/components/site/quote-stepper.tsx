@@ -454,7 +454,7 @@ export function QuoteStepper() {
                 id="state"
                 name="state"
                 autoComplete="address-level1"
-                className="mt-1 flex h-11 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2 text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ae905e]/50"
+                className="mt-1 flex h-11 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2 text-base md:text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ae905e]/50"
                 value={watchedState ?? ""}
                 onChange={(event) => {
                   stepTwoForm.setValue("state", event.target.value, {
