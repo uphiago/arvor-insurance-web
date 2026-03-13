@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arvor Insurance Web
 
-## Getting Started
+Base técnica inicial do site institucional da Arvor Insurance.
 
-First, run the development server:
+## Stack atual
+
+- Next.js 16 com App Router
+- TypeScript com `strict: true`
+- Tailwind CSS v4
+- ESLint + Prettier
+- Husky + lint-staged
+- Vitest + React Testing Library
+- `pnpm` como package manager oficial
+
+## Estado atual do scaffold
+
+Esta entrega cobre a fundação do app e a organização inicial do projeto.
+
+Já está no repositório:
+
+- shell do app em `src/app`
+- homepage placeholder em `src/app/(site)/page.tsx`
+- configuração de lint, format e hooks
+- harness inicial de testes com Vitest
+- documentação técnica e briefing em `docs/`
+
+Ainda não está implementado nesta etapa:
+
+- Sanity Studio em `/studio`
+- Playwright
+- componentes `shadcn/ui`
+- homepage institucional final
+- stepper de cotação
+
+## Rodando localmente
+
+Pré-requisito: Node.js `20.9+`
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install --frozen-lockfile
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Comandos úteis
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm dev
+pnpm lint
+pnpm test --run
+pnpm build
+```
 
-## Learn More
+## Próximo arquivo para editar
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+O ponto de entrada atual da home pública está em `src/app/(site)/page.tsx`.

@@ -10,6 +10,21 @@
 
 ---
 
+## Execution Status
+
+Implementation in the repository currently covers the scaffold through the base app shell, formatting hooks, and Vitest harness.
+
+The following planned items are **not yet implemented**:
+
+- embedded Sanity Studio routes and configuration
+- Playwright setup and E2E coverage
+- `shadcn/ui` initialization
+- content model and operational runbooks
+
+This file remains the implementation target, not a statement that every item below already exists in the codebase.
+
+---
+
 ## File Structure Map
 
 ### Files to create or modify in the scaffold
@@ -51,6 +66,7 @@
 ### Task 1: Generate the Next.js application foundation
 
 **Files:**
+
 - Create: base Next.js scaffold files in repository root and `src/`
 - Preserve: `docs/briefing-tecnico-site-institucional-v1.md`
 - Preserve: `docs/decisions/2026-03-13-technical-foundation.md`
@@ -103,6 +119,7 @@ git commit -m "feat: scaffold Next.js foundation"
 ### Task 2: Normalize the generated app into the agreed baseline
 
 **Files:**
+
 - Modify: `package.json`
 - Modify: `.gitignore`
 - Create: `.nvmrc`
@@ -152,6 +169,7 @@ git commit -m "feat: align app shell with Arvor architecture"
 ### Task 3: Add formatting, git hooks, and lint-staged
 
 **Files:**
+
 - Modify: `package.json`
 - Create: `prettier.config.*`
 - Create: `.prettierignore`
@@ -197,6 +215,7 @@ git commit -m "chore: add formatting and git hooks"
 ### Task 4: Install and configure Vitest and React Testing Library
 
 **Files:**
+
 - Modify: `package.json`
 - Create: `vitest.config.ts`
 - Create: `vitest.setup.ts`
@@ -205,16 +224,16 @@ git commit -m "chore: add formatting and git hooks"
 - [ ] **Step 1: Write the failing test**
 
 ```tsx
-import { render, screen } from "@testing-library/react"
-import HomePage from "@/app/(site)/page"
-import { describe, expect, it } from "vitest"
+import { render, screen } from "@testing-library/react";
+import HomePage from "@/app/(site)/page";
+import { describe, expect, it } from "vitest";
 
 describe("HomePage", () => {
   it("renders the Arvor placeholder heading", () => {
-    render(<HomePage />)
-    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument()
-  })
-})
+    render(<HomePage />);
+    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+  });
+});
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -247,6 +266,7 @@ git commit -m "test: add Vitest and Testing Library setup"
 ### Task 5: Install and configure Playwright
 
 **Files:**
+
 - Modify: `package.json`
 - Create: `playwright.config.ts`
 - Create: `playwright/smoke.spec.ts`
@@ -286,6 +306,7 @@ git commit -m "test: add Playwright smoke coverage"
 ### Task 6: Initialize shadcn/ui and create base site primitives
 
 **Files:**
+
 - Create or modify: `components.json`
 - Create: `src/components/ui/*`
 - Create: `src/components/site/*`
@@ -319,6 +340,7 @@ git commit -m "feat: add UI foundation and homepage shell"
 ### Task 7: Embed Sanity Studio and create the client foundation
 
 **Files:**
+
 - Create: `sanity.config.ts` or equivalent Studio config file
 - Create: `src/sanity/env.ts`
 - Create: `src/sanity/lib/client.ts`
@@ -367,6 +389,7 @@ git commit -m "feat: embed Sanity Studio foundation"
 ### Task 8: Document setup, content boundaries, and architecture
 
 **Files:**
+
 - Create: `docs/architecture/project-structure.md`
 - Create: `docs/content-model/content-ownership.md`
 - Create: `docs/runbooks/local-setup.md`
@@ -406,6 +429,7 @@ git commit -m "docs: add architecture and setup runbooks"
 ### Task 9: Verify the full foundation
 
 **Files:**
+
 - Verify the repository as a whole
 
 - [ ] **Step 1: Run lint**
