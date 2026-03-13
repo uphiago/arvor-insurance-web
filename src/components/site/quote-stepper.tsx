@@ -412,7 +412,7 @@ export function QuoteStepper() {
             <label className="flex items-start gap-2 text-sm">
               <input
                 type="checkbox"
-                className="mt-1"
+                className="mt-1 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ae905e]"
                 {...stepOneForm.register("acceptedTerms")}
               />
               <span>
