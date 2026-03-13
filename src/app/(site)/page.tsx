@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/ui/reveal";
 import { QuoteStepper } from "@/components/site/quote-stepper";
 import { ARVOR_CONTACT_EMAIL, ARVOR_WHATSAPP_MESSAGE } from "@/lib/arvor";
+import { CopyEmail } from "@/components/ui/copy-email";
 
 function toWhatsappUrl() {
   return `https://wa.me/?text=${encodeURIComponent(ARVOR_WHATSAPP_MESSAGE)}`;
@@ -283,10 +284,7 @@ export default function HomePage() {
             Arvor Insurance · Corretora Sustentável
           </p>
           <p>
-            Contato para cotações:{" "}
-            <a href={`mailto:${ARVOR_CONTACT_EMAIL}`} className="underline">
-              {ARVOR_CONTACT_EMAIL}
-            </a>
+            Contato para cotações: <CopyEmail email={ARVOR_CONTACT_EMAIL} />
           </p>
           <p className="text-[#2f3c4c]/70">
             Atendimento nacional para PF, Coletivo por Adesão, PJ e MEI.
