@@ -1,6 +1,12 @@
 import { Reveal } from "@/components/ui/reveal";
 import { QuoteStepper } from "@/components/site/quote-stepper";
-import { ARVOR_CONTACT_EMAIL, toWhatsappUrl } from "@/lib/arvor";
+import {
+  ARVOR_CONTACT_EMAIL,
+  ARVOR_CNPJ,
+  ARVOR_INSTAGRAM,
+  ARVOR_LINKEDIN,
+  toWhatsappUrl,
+} from "@/lib/arvor";
 import { CopyEmail } from "@/components/ui/copy-email";
 
 export default function HomePage() {
@@ -171,10 +177,34 @@ export default function HomePage() {
             </h2>
             <p className="mt-4 max-w-2xl leading-relaxed text-[#2f3c4c]/80">
               O propósito socioambiental da Arvor está integrado ao modelo de
-              negócio: parte dos resultados é direcionada a ONGs, tornando cada
-              contratação também uma contribuição para iniciativas de impacto.
+              negócio: parte dos resultados é direcionada a iniciativas de
+              impacto, reforçando que cada contratação também contribui para um
+              mundo melhor.
             </p>
           </Reveal>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {[
+              {
+                name: "SOS Mata Atlântica",
+                desc: "Proteção e restauração da Mata Atlântica, um dos biomas mais ameaçados do planeta.",
+              },
+              {
+                name: "ONG ZOE",
+                desc: "Combate à pobreza extrema e ao tráfico de seres humanos em contextos de vulnerabilidade.",
+              },
+            ].map((org, i) => (
+              <Reveal key={org.name} delay={(i + 1) as 1 | 2}>
+                <div className="rounded-2xl border border-[#8fa286]/35 bg-[#8fa286]/8 p-5">
+                  <p className="text-sm font-semibold text-[#8fa286]">
+                    {org.name}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-[#2f3c4c]/75">
+                    {org.desc}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </section>
 
         {/* Produtos */}
@@ -272,19 +302,79 @@ export default function HomePage() {
         </section>
 
         <QuoteStepper />
+
+        {/* Falar com Especialista */}
+        <section className="bg-[#2f3c4c]/90 py-16 text-[#e5ddc9]">
+          <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
+            <Reveal>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-[#8fa286]">
+                Atendimento consultivo
+              </p>
+              <h2 className="text-balance text-3xl font-semibold">
+                Prefere falar com um especialista?
+              </h2>
+              <p className="mt-4 max-w-xl leading-relaxed text-[#e5ddc9]/80">
+                Para empresas, casos complexos ou quem prefere orientação
+                personalizada — nossa equipe está pronta para apresentar as
+                melhores opções para o seu perfil.
+              </p>
+              <a
+                href={toWhatsappUrl()}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-6 inline-flex items-center justify-center rounded-full bg-[#8fa286] px-8 py-3 font-semibold text-[#2f3c4c] transition hover:bg-[#7c8f75]"
+              >
+                Falar com especialista via WhatsApp
+              </a>
+            </Reveal>
+          </div>
+        </section>
       </main>
 
-      <footer className="border-t border-[#2f3c4c]/15 bg-[#f4ede0] py-6">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-5 text-sm md:flex-row md:items-center md:justify-between md:px-8">
-          <p className="font-semibold">
-            Arvor Insurance · Corretora Sustentável
-          </p>
-          <p>
-            Contato: <CopyEmail email={ARVOR_CONTACT_EMAIL} />
-          </p>
-          <p className="text-[#2f3c4c]/60">
-            Atendimento nacional · PF, Coletivo, PJ e MEI
-          </p>
+      <footer className="border-t border-[#2f3c4c]/15 bg-[#f4ede0] py-8">
+        <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="font-semibold">Arvor Insurance</p>
+              <p className="mt-1 text-sm text-[#2f3c4c]/60">
+                Corretora Sustentável
+              </p>
+            </div>
+            <div className="text-sm">
+              <p className="font-semibold">Contato</p>
+              <p className="mt-1">
+                <CopyEmail email={ARVOR_CONTACT_EMAIL} />
+              </p>
+              <p className="mt-1 text-[#2f3c4c]/60">
+                Atendimento nacional · PF, Coletivo, PJ e MEI
+              </p>
+            </div>
+            <div className="text-sm">
+              <p className="font-semibold">Redes sociais</p>
+              <div className="mt-1 flex gap-4">
+                <a
+                  href={ARVOR_INSTAGRAM}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#2f3c4c]/70 underline hover:text-[#2f3c4c]"
+                >
+                  Instagram
+                </a>
+                <a
+                  href={ARVOR_LINKEDIN}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#2f3c4c]/70 underline hover:text-[#2f3c4c]"
+                >
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="mt-6 border-t border-[#2f3c4c]/10 pt-4 text-xs text-[#2f3c4c]/50">
+            © {new Date().getFullYear()} Arvor Insurance · CNPJ {ARVOR_CNPJ} ·
+            Corretora de Seguros · Todos os direitos reservados.
+          </div>
         </div>
       </footer>
     </div>

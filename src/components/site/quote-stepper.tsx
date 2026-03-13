@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { toWhatsappUrl } from "@/lib/arvor";
+import { ARVOR_CONTACT_EMAIL, toWhatsappUrl } from "@/lib/arvor";
+import { CopyEmail } from "@/components/ui/copy-email";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -578,12 +579,12 @@ export function QuoteStepper() {
               </div>
 
               <div className="rounded-2xl border border-[#ae905e]/60 bg-[#ae905e]/15 p-4 text-sm">
-                <p>
-                  Após a solicitação, nossa equipe confirma o recebimento e
-                  orienta o envio dos documentos necessários.
-                </p>
-                <p className="mt-1 text-[#2f3c4c]/80">
-                  Prazo de retorno: até 24h úteis.
+                <p>Após a solicitação, envie os documentos listados para:</p>
+                <div className="mt-2 font-semibold">
+                  <CopyEmail email={ARVOR_CONTACT_EMAIL} />
+                </div>
+                <p className="mt-2 text-[#2f3c4c]/80">
+                  Nossa equipe retorna em até 24h úteis.
                 </p>
               </div>
 
