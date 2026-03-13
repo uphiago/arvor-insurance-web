@@ -196,6 +196,10 @@ export default function HomePage() {
   const [stepTwoData, setStepTwoData] = useState<StepTwoValidatedData | null>(
     null,
   );
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [submitMessage, setSubmitMessage] = useState("");
 
   const stepOneForm = useForm<StepOneData>({
     resolver: zodResolver(STEP_ONE_SCHEMA),
@@ -257,34 +261,40 @@ export default function HomePage() {
     setStep(3);
   }
 
-  function buildMailtoHref() {
+  async function handleQuoteRequest() {
     if (!stepOneData || !stepTwoData) {
-      return `mailto:${CONTACT_EMAIL}`;
+      return;
     }
 
-    const subject = `[Cotação Arvor] ${modalityLabel(stepTwoData.modality)} - ${stepTwoData.state} - ${stepOneData.fullName}`;
-    const body = [
-      "Olá, equipe Arvor!",
-      "",
-      "Segue minha solicitação de cotação:",
-      `Nome: ${stepOneData.fullName}`,
-      `Telefone: ${stepOneData.phone}`,
-      `E-mail: ${stepOneData.email}`,
-      `Estado: ${stepTwoData.state}`,
-      `Região: ${stepTwoData.region}`,
-      `Modalidade: ${modalityLabel(stepTwoData.modality)}`,
-      "",
-      "Documentos necessários:",
-      ...docs.map((doc) => `- ${doc}`),
-      "",
-      "Importante:",
-      "- Esta solicitação será enviada para a equipe Arvor e em cópia para você.",
-      "- Após a análise, a equipe retorna com a proposta e próximos passos.",
-      "",
-      "Obrigado.",
-    ].join("\n");
+    setSubmitStatus("loading");
+    setSubmitMessage("Enviando solicitação...");
 
-    return `mailto:${CONTACT_EMAIL}?cc=${encodeURIComponent(stepOneData.email)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const response = await fetch("/api/quote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: stepOneData.fullName,
+        phone: stepOneData.phone,
+        email: stepOneData.email,
+        state: stepTwoData.state,
+        region: stepTwoData.region,
+        modality: modalityLabel(stepTwoData.modality),
+        documents: docs,
+      }),
+    });
+
+    if (response.ok) {
+      setSubmitStatus("success");
+      setSubmitMessage(
+        "Solicitação enviada com sucesso. Você receberá confirmação no seu e-mail.",
+      );
+      return;
+    }
+
+    setSubmitStatus("error");
+    setSubmitMessage(
+      "Não foi possível enviar automaticamente. Tente novamente em instantes.",
+    );
   }
 
   return (
@@ -470,7 +480,7 @@ export default function HomePage() {
               return (
                 <div
                   key={label}
-                  className={`rounded-xl border px-3 py-2 text-center text-xs font-semibold md:text-sm ${
+                  className={`flex h-14 items-center justify-center rounded-xl border px-3 py-2 text-center text-xs font-semibold md:text-sm ${
                     done
                       ? "border-[#8fa286] bg-[#8fa286] text-[#2f3c4c]"
                       : active
@@ -485,7 +495,7 @@ export default function HomePage() {
             })}
           </div>
 
-          <div className="mt-6 rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
+          <div className="mt-6 min-h-[560px] rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
             {step === 1 ? (
               <form
                 className="space-y-4"
@@ -613,13 +623,10 @@ export default function HomePage() {
 
                   <div className="rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2">
                     <p className="text-xs font-semibold uppercase tracking-wide text-[#2f3c4c]/70">
-                      Região identificada automaticamente
+                      Cobertura regional
                     </p>
                     <p className="mt-1 text-sm font-semibold">
-                      {watchedState
-                        ? (REGION_BY_UF[watchedState]?.[0] ??
-                          "Não identificado")
-                        : "Selecione o estado"}
+                      Definida automaticamente pelo estado selecionado
                     </p>
                   </div>
                 </div>
@@ -630,7 +637,7 @@ export default function HomePage() {
                     {MODALITIES.map((item) => (
                       <label
                         key={item.value}
-                        className={`cursor-pointer rounded-2xl border p-4 transition ${
+                        className={`flex min-h-28 cursor-pointer flex-col justify-between rounded-2xl border p-4 transition ${
                           watchedModality === item.value
                             ? "border-[#8fa286] bg-[#8fa286]/15"
                             : "border-[#2f3c4c]/20 bg-[#fffdf8]"
@@ -687,8 +694,7 @@ export default function HomePage() {
                     <strong>E-mail:</strong> {stepOneData.email}
                   </p>
                   <p>
-                    <strong>Estado/Região:</strong> {stepTwoData.state} /{" "}
-                    {stepTwoData.region}
+                    <strong>Estado:</strong> {stepTwoData.state}
                   </p>
                   <p className="md:col-span-2">
                     <strong>Modalidade:</strong>{" "}
@@ -719,12 +725,16 @@ export default function HomePage() {
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <a
-                    href={buildMailtoHref()}
+                  <button
+                    type="button"
+                    onClick={handleQuoteRequest}
+                    disabled={submitStatus === "loading"}
                     className="rounded-full bg-[#2f3c4c] px-6 py-3 font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
                   >
-                    Solicitar cotação
-                  </a>
+                    {submitStatus === "loading"
+                      ? "Enviando..."
+                      : "Solicitar cotação"}
+                  </button>
                   <a
                     href={toWhatsappUrl()}
                     target="_blank"
@@ -734,6 +744,17 @@ export default function HomePage() {
                     Falar com especialista
                   </a>
                 </div>
+                {submitMessage ? (
+                  <p
+                    className={`text-sm ${
+                      submitStatus === "error"
+                        ? "text-[#c5874a]"
+                        : "text-[#2f3c4c]/80"
+                    }`}
+                  >
+                    {submitMessage}
+                  </p>
+                ) : null}
 
                 <button
                   type="button"

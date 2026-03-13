@@ -37,6 +37,9 @@ describe("Quote flow UX", () => {
 
     await waitFor(() => {
       expect(screen.queryByLabelText("Região")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("Região identificada automaticamente"),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -46,7 +49,7 @@ describe("Quote flow UX", () => {
     await advanceToStepThree();
 
     expect(
-      screen.getByRole("link", { name: "Solicitar cotação" }),
+      screen.getByRole("button", { name: "Solicitar cotação" }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Copiar e-mail" }),
