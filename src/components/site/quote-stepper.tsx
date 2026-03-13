@@ -589,13 +589,15 @@ export function QuoteStepper() {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setStep(2)}
-                >
-                  Voltar
-                </Button>
+                {submitStatus !== "loading" && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setStep(2)}
+                  >
+                    Voltar
+                  </Button>
+                )}
                 <Button
                   type="button"
                   onClick={handleQuoteRequest}
