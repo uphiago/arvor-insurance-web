@@ -480,7 +480,7 @@ export function QuoteStepper() {
                 {MODALITIES.map((item) => (
                   <label
                     key={item.value}
-                    className={`flex min-h-36 cursor-pointer flex-col rounded-2xl border p-4 transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#ae905e] has-[:focus-visible]:ring-offset-1 ${
+                    className={`flex cursor-pointer flex-col rounded-2xl border p-3 transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#ae905e] has-[:focus-visible]:ring-offset-1 md:p-4 ${
                       watchedModality === item.value
                         ? "border-[#8fa286] bg-[#8fa286]/15"
                         : "border-[#2f3c4c]/20 bg-[#fffdf8]"
@@ -588,7 +588,7 @@ export function QuoteStepper() {
                 </p>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 <Button
                   type="button"
                   variant="outline"
