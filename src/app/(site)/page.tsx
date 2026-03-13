@@ -4,6 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const CONTACT_EMAIL = "dimitricontro@arvorin.com.br";
 const WHATSAPP_MESSAGE =
@@ -286,7 +289,7 @@ export default function HomePage() {
     if (response.ok) {
       setSubmitStatus("success");
       setSubmitMessage(
-        "Solicitação enviada com sucesso. Você receberá confirmação no seu e-mail.",
+        "Solicitação registrada com sucesso. Nossa equipe retornará em até 24h úteis.",
       );
       return;
     }
@@ -349,7 +352,7 @@ export default function HomePage() {
               <div className="flex flex-col gap-3 sm:flex-row">
                 <a
                   href="#autoatendimento"
-                  className="rounded-full bg-[#2f3c4c] px-6 py-3 text-center font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
+                  className="inline-flex items-center justify-center rounded-full bg-[#2f3c4c] px-6 py-3 text-center font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
                 >
                   Cotar agora
                 </a>
@@ -357,7 +360,7 @@ export default function HomePage() {
                   href={toWhatsappUrl()}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full border border-[#c5874a] px-6 py-3 text-center font-semibold text-[#c5874a] transition hover:bg-[#c5874a] hover:text-[#e5ddc9]"
+                  className="inline-flex items-center justify-center rounded-full border border-[#c5874a] px-6 py-3 text-center font-semibold text-[#c5874a] transition hover:bg-[#c5874a] hover:text-[#e5ddc9]"
                 >
                   Falar com especialista
                 </a>
@@ -467,8 +470,8 @@ export default function HomePage() {
         >
           <h2 className="text-3xl font-semibold">Autoatendimento de Cotação</h2>
           <p className="mt-2 text-sm text-[#2f3c4c]/80">
-            Preencha os dados em 3 etapas. A solicitação abre seu e-mail com
-            envio para a equipe Arvor e cópia para você.
+            Preencha os dados em 3 etapas. Ao concluir, registramos sua
+            solicitação e a equipe entra em contato.
           </p>
 
           <div className="mt-8 grid grid-cols-3 gap-2">
@@ -502,13 +505,11 @@ export default function HomePage() {
                 onSubmit={stepOneForm.handleSubmit(onSubmitStepOne)}
               >
                 <div>
-                  <label className="text-sm font-semibold" htmlFor="fullName">
-                    Nome completo
-                  </label>
-                  <input
+                  <Label htmlFor="fullName">Nome completo</Label>
+                  <Input
                     id="fullName"
                     type="text"
-                    className="mt-1 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2"
+                    className="mt-1"
                     {...stepOneForm.register("fullName")}
                   />
                   {stepOneForm.formState.errors.fullName?.message ? (
@@ -519,13 +520,11 @@ export default function HomePage() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold" htmlFor="phone">
-                    Telefone
-                  </label>
-                  <input
+                  <Label htmlFor="phone">Telefone</Label>
+                  <Input
                     id="phone"
                     type="tel"
-                    className="mt-1 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2"
+                    className="mt-1"
                     value={watchedPhone ?? ""}
                     onChange={(event) =>
                       stepOneForm.setValue(
@@ -545,13 +544,11 @@ export default function HomePage() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold" htmlFor="email">
-                    E-mail
-                  </label>
-                  <input
+                  <Label htmlFor="email">E-mail</Label>
+                  <Input
                     id="email"
                     type="email"
-                    className="mt-1 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2"
+                    className="mt-1"
                     {...stepOneForm.register("email")}
                   />
                   {stepOneForm.formState.errors.email?.message ? (
@@ -578,12 +575,9 @@ export default function HomePage() {
                   </p>
                 ) : null}
 
-                <button
-                  type="submit"
-                  className="rounded-full bg-[#2f3c4c] px-6 py-3 font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
-                >
+                <Button type="submit" variant="primary">
                   Avançar
-                </button>
+                </Button>
               </form>
             ) : null}
 
@@ -594,12 +588,10 @@ export default function HomePage() {
               >
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <label className="text-sm font-semibold" htmlFor="state">
-                      Estado
-                    </label>
+                    <Label htmlFor="state">Estado</Label>
                     <select
                       id="state"
-                      className="mt-1 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2"
+                      className="mt-1 flex h-11 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2 text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8fa286]/45"
                       value={watchedState ?? ""}
                       onChange={(event) => {
                         stepTwoForm.setValue("state", event.target.value, {
@@ -664,19 +656,16 @@ export default function HomePage() {
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <button
+                  <Button
                     type="button"
+                    variant="outline"
                     onClick={() => setStep(1)}
-                    className="rounded-full border border-[#2f3c4c]/30 px-5 py-2 font-semibold"
                   >
                     Voltar
-                  </button>
-                  <button
-                    type="submit"
-                    className="rounded-full bg-[#2f3c4c] px-6 py-3 font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
-                  >
+                  </Button>
+                  <Button type="submit" variant="primary">
                     Avançar
-                  </button>
+                  </Button>
                 </div>
               </form>
             ) : null}
@@ -715,31 +704,30 @@ export default function HomePage() {
 
                 <div className="rounded-2xl border border-[#ae905e]/60 bg-[#ae905e]/15 p-4 text-sm">
                   <p>
-                    Envie os documentos listados para:{" "}
-                    <strong>{CONTACT_EMAIL}</strong>
+                    Após a solicitação, nossa equipe confirma o recebimento e
+                    orienta o envio dos documentos necessários.
                   </p>
                   <p className="mt-1 text-[#2f3c4c]/80">
-                    Você receberá esta solicitação em cópia no seu e-mail e
-                    nossa equipe entrará em contato em até 24h úteis.
+                    Prazo de retorno: até 24h úteis.
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <button
+                  <Button
                     type="button"
                     onClick={handleQuoteRequest}
                     disabled={submitStatus === "loading"}
-                    className="rounded-full bg-[#2f3c4c] px-6 py-3 font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
+                    variant="primary"
                   >
                     {submitStatus === "loading"
                       ? "Enviando..."
                       : "Solicitar cotação"}
-                  </button>
+                  </Button>
                   <a
                     href={toWhatsappUrl()}
                     target="_blank"
                     rel="noreferrer"
-                    className="rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c]"
+                    className="inline-flex items-center justify-center rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c]"
                   >
                     Falar com especialista
                   </a>
@@ -756,13 +744,14 @@ export default function HomePage() {
                   </p>
                 ) : null}
 
-                <button
+                <Button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="text-sm font-semibold text-[#2f3c4c]/70 underline"
+                  variant="outline"
+                  className="border-0 bg-transparent p-0 text-sm font-semibold text-[#2f3c4c]/70 underline hover:bg-transparent"
                 >
                   Voltar para editar dados
-                </button>
+                </Button>
               </div>
             ) : null}
           </div>

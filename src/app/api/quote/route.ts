@@ -1,4 +1,3 @@
-import { Resend } from "resend";
 import { z } from "zod";
 
 const quoteRequestSchema = z.object({
@@ -14,60 +13,34 @@ const quoteRequestSchema = z.object({
 export async function POST(request: Request) {
   try {
     const payload = quoteRequestSchema.parse(await request.json());
+    const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
 
-    const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
+    if (!webhookUrl) {
       return Response.json(
-        { error: "RESEND_API_KEY não configurada." },
+        { error: "GOOGLE_SHEETS_WEBHOOK_URL não configurada." },
         { status: 500 },
       );
     }
-    const resend = new Resend(apiKey);
 
-    const to = process.env.QUOTE_RECEIVER_EMAIL ?? "dotmindit@gmail.com";
-    const from = process.env.QUOTE_FROM_EMAIL ?? "onboarding@resend.dev";
-
-    const subject = `[Cotação Arvor] ${payload.modality} - ${payload.state} - ${payload.name}`;
-
-    const sharedBody = [
-      `Nome: ${payload.name}`,
-      `Telefone: ${payload.phone}`,
-      `E-mail: ${payload.email}`,
-      `Estado: ${payload.state}`,
-      `Região: ${payload.region}`,
-      `Modalidade: ${payload.modality}`,
-      "",
-      "Documentos necessários:",
-      ...payload.documents.map((doc) => `- ${doc}`),
-    ].join("\n");
-
-    await resend.emails.send({
-      from,
-      to,
-      cc: payload.email,
-      subject,
-      text: [
-        "Nova solicitação de cotação Arvor",
-        "",
-        sharedBody,
-        "",
-        "Esta mensagem foi enviada com cópia para o cliente.",
-      ].join("\n"),
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        createdAt: new Date().toISOString(),
+        source: "arvor-site",
+        ...payload,
+      }),
+      cache: "no-store",
     });
 
-    await resend.emails.send({
-      from,
-      to: payload.email,
-      subject: "Recebemos sua solicitação de cotação - Arvor Insurance",
-      text: [
-        `Olá, ${payload.name}!`,
-        "",
-        "Recebemos sua solicitação de cotação.",
-        "Nossa equipe retornará em até 24h úteis com os próximos passos.",
-        "",
-        sharedBody,
-      ].join("\n"),
-    });
+    if (!response.ok) {
+      return Response.json(
+        { error: "Falha ao registrar solicitação no Google Sheets." },
+        { status: 502 },
+      );
+    }
 
     return Response.json({ ok: true });
   } catch {
