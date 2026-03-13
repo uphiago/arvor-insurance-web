@@ -120,7 +120,6 @@ const STEP_ONE_SCHEMA = z.object({
 
 const STEP_TWO_SCHEMA = z.object({
   state: z.string().min(1, "Selecione o estado."),
-  region: z.string().min(1, "Selecione a região."),
   modality: z.string().min(1, "Selecione uma modalidade."),
 });
 
@@ -197,7 +196,6 @@ export default function HomePage() {
   const [stepTwoData, setStepTwoData] = useState<StepTwoValidatedData | null>(
     null,
   );
-  const [copyFeedback, setCopyFeedback] = useState("");
 
   const stepOneForm = useForm<StepOneData>({
     resolver: zodResolver(STEP_ONE_SCHEMA),
@@ -215,7 +213,6 @@ export default function HomePage() {
     mode: "onChange",
     defaultValues: {
       state: "",
-      region: "",
       modality: undefined,
     },
   });
@@ -233,7 +230,6 @@ export default function HomePage() {
     name: "phone",
   });
 
-  const regionOptions = watchedState ? (REGION_BY_UF[watchedState] ?? []) : [];
   const selectedModality = stepTwoData?.modality
     ? stepTwoData.modality
     : MODALITIES.some((item) => item.value === watchedModality)
@@ -255,19 +251,10 @@ export default function HomePage() {
     }
     setStepTwoData({
       state: values.state,
-      region: values.region,
+      region: REGION_BY_UF[values.state]?.[0] ?? "",
       modality: values.modality as Modality,
     });
     setStep(3);
-  }
-
-  async function handleCopyEmail() {
-    try {
-      await navigator.clipboard.writeText(CONTACT_EMAIL);
-      setCopyFeedback("E-mail copiado.");
-    } catch {
-      setCopyFeedback("Não foi possível copiar automaticamente.");
-    }
   }
 
   function buildMailtoHref() {
@@ -290,15 +277,19 @@ export default function HomePage() {
       "Documentos necessários:",
       ...docs.map((doc) => `- ${doc}`),
       "",
+      "Importante:",
+      "- Esta solicitação será enviada para a equipe Arvor e em cópia para você.",
+      "- Após a análise, a equipe retorna com a proposta e próximos passos.",
+      "",
       "Obrigado.",
     ].join("\n");
 
-    return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    return `mailto:${CONTACT_EMAIL}?cc=${encodeURIComponent(stepOneData.email)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
   return (
-    <div className="bg-[#e5ddc9] text-[#2f3c4c]">
-      <header className="sticky top-0 z-20 border-b border-[#ae905e]/50 bg-[#e5ddc9]/95 backdrop-blur">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,#f7f2e8_0%,#e5ddc9_42%,#d9d1bc_100%)] text-[#2f3c4c]">
+      <header className="sticky top-0 z-20 border-b border-[#ae905e]/35 bg-[#e5ddc9]/55 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 md:px-8">
           <a href="#inicio" className="text-lg font-semibold tracking-wide">
             Arvor Insurance
@@ -321,7 +312,7 @@ export default function HomePage() {
             href={toWhatsappUrl()}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full bg-[#8fa286] px-4 py-2 text-sm font-semibold text-[#2f3c4c] transition hover:bg-[#7c8f75]"
+            className="rounded-full border border-[#8fa286]/80 bg-[#8fa286]/80 px-4 py-2 text-sm font-semibold text-[#2f3c4c] shadow-sm transition hover:bg-[#7c8f75]"
           >
             Falar com Especialista
           </a>
@@ -362,7 +353,7 @@ export default function HomePage() {
                 </a>
               </div>
             </div>
-            <div className="rounded-3xl border border-[#ae905e]/60 bg-[#2f3c4c] p-8 text-[#e5ddc9]">
+            <div className="rounded-3xl border border-[#ae905e]/65 bg-[#2f3c4c]/88 p-8 text-[#e5ddc9] shadow-xl backdrop-blur-xl">
               <p className="text-sm uppercase tracking-wider text-[#8fa286]">
                 Diferencial Arvor
               </p>
@@ -377,16 +368,16 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="sobre" className="bg-[#2f3c4c] py-16 text-[#e5ddc9]">
+        <section id="sobre" className="bg-[#2f3c4c]/90 py-16 text-[#e5ddc9]">
           <div className="mx-auto grid w-full max-w-6xl gap-8 px-5 md:grid-cols-3 md:px-8">
-            <article className="rounded-2xl border border-[#8fa286]/40 p-6">
+            <article className="rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md">
               <h2 className="text-xl font-semibold">Missão</h2>
               <p className="mt-3 text-sm leading-6 text-[#e5ddc9]/85">
                 Estruturar soluções em saúde e benefícios com atendimento
                 próximo e responsável para empresas e famílias.
               </p>
             </article>
-            <article className="rounded-2xl border border-[#8fa286]/40 p-6">
+            <article className="rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md">
               <h2 className="text-xl font-semibold">Proposta de Valor</h2>
               <p className="mt-3 text-sm leading-6 text-[#e5ddc9]/85">
                 Redução de absenteísmo, retenção de talentos e aumento de
@@ -394,7 +385,7 @@ export default function HomePage() {
                 cada cliente.
               </p>
             </article>
-            <article className="rounded-2xl border border-[#8fa286]/40 p-6">
+            <article className="rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md">
               <h2 className="text-xl font-semibold">Abrangência</h2>
               <p className="mt-3 text-sm leading-6 text-[#e5ddc9]/85">
                 Atendimento nacional para PF, Coletivo por Adesão, PJ e MEI com
@@ -429,7 +420,7 @@ export default function HomePage() {
             ].map((item) => (
               <article
                 key={item}
-                className="rounded-2xl border border-[#ae905e]/60 bg-[#e5ddc9] p-6 shadow-sm"
+                className="rounded-2xl border border-[#ae905e]/65 bg-[#f9f5ea]/55 p-6 shadow-lg backdrop-blur-md"
               >
                 <h3 className="text-xl font-semibold">{item}</h3>
                 <p className="mt-2 text-sm text-[#2f3c4c]/80">
@@ -443,7 +434,7 @@ export default function HomePage() {
 
         <section
           id="como-funciona"
-          className="bg-[#2f3c4c] py-16 text-[#e5ddc9]"
+          className="bg-[#2f3c4c]/92 py-16 text-[#e5ddc9]"
         >
           <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
             <h2 className="text-3xl font-semibold">Como funciona</h2>
@@ -451,7 +442,7 @@ export default function HomePage() {
               {["1. Cotar", "2. Escolher", "3. Contratar"].map((item) => (
                 <div
                   key={item}
-                  className="rounded-2xl border border-[#8fa286]/40 bg-[#2f3c4c] p-5"
+                  className="rounded-2xl border border-[#8fa286]/45 bg-[#e5ddc9]/10 p-5 backdrop-blur-md"
                 >
                   <p className="text-xl font-semibold">{item}</p>
                 </div>
@@ -466,8 +457,8 @@ export default function HomePage() {
         >
           <h2 className="text-3xl font-semibold">Autoatendimento de Cotação</h2>
           <p className="mt-2 text-sm text-[#2f3c4c]/80">
-            Preencha os dados em 3 etapas. Ao final, envie por e-mail para
-            receber a proposta.
+            Preencha os dados em 3 etapas. A solicitação abre seu e-mail com
+            envio para a equipe Arvor e cópia para você.
           </p>
 
           <div className="mt-8 grid grid-cols-3 gap-2">
@@ -494,7 +485,7 @@ export default function HomePage() {
             })}
           </div>
 
-          <div className="mt-6 rounded-3xl border border-[#2f3c4c]/20 bg-[#e5ddc9] p-5 md:p-8">
+          <div className="mt-6 rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
             {step === 1 ? (
               <form
                 className="space-y-4"
@@ -604,10 +595,6 @@ export default function HomePage() {
                         stepTwoForm.setValue("state", event.target.value, {
                           shouldValidate: true,
                         });
-                        stepTwoForm.setValue("region", "", {
-                          shouldValidate: true,
-                        });
-                        setCopyFeedback("");
                       }}
                     >
                       <option value="">Selecione</option>
@@ -624,28 +611,16 @@ export default function HomePage() {
                     ) : null}
                   </div>
 
-                  <div>
-                    <label className="text-sm font-semibold" htmlFor="region">
-                      Região
-                    </label>
-                    <select
-                      id="region"
-                      className="mt-1 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2 disabled:opacity-60"
-                      disabled={!watchedState}
-                      {...stepTwoForm.register("region")}
-                    >
-                      <option value="">Selecione</option>
-                      {regionOptions.map((region) => (
-                        <option key={region} value={region}>
-                          {region}
-                        </option>
-                      ))}
-                    </select>
-                    {stepTwoForm.formState.errors.region?.message ? (
-                      <p className="mt-1 text-xs text-[#c5874a]">
-                        {stepTwoForm.formState.errors.region.message}
-                      </p>
-                    ) : null}
+                  <div className="rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#2f3c4c]/70">
+                      Região identificada automaticamente
+                    </p>
+                    <p className="mt-1 text-sm font-semibold">
+                      {watchedState
+                        ? (REGION_BY_UF[watchedState]?.[0] ??
+                          "Não identificado")
+                        : "Selecione o estado"}
+                    </p>
                   </div>
                 </div>
 
@@ -738,7 +713,8 @@ export default function HomePage() {
                     <strong>{CONTACT_EMAIL}</strong>
                   </p>
                   <p className="mt-1 text-[#2f3c4c]/80">
-                    Nossa equipe entrará em contato em até 24h úteis.
+                    Você receberá esta solicitação em cópia no seu e-mail e
+                    nossa equipe entrará em contato em até 24h úteis.
                   </p>
                 </div>
 
@@ -747,15 +723,8 @@ export default function HomePage() {
                     href={buildMailtoHref()}
                     className="rounded-full bg-[#2f3c4c] px-6 py-3 font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
                   >
-                    Enviar por E-mail
+                    Solicitar cotação
                   </a>
-                  <button
-                    type="button"
-                    onClick={handleCopyEmail}
-                    className="rounded-full border border-[#2f3c4c]/30 px-6 py-3 font-semibold"
-                  >
-                    Copiar e-mail
-                  </button>
                   <a
                     href={toWhatsappUrl()}
                     target="_blank"
@@ -765,10 +734,6 @@ export default function HomePage() {
                     Falar com especialista
                   </a>
                 </div>
-
-                {copyFeedback ? (
-                  <p className="text-xs text-[#2f3c4c]/80">{copyFeedback}</p>
-                ) : null}
 
                 <button
                   type="button"
