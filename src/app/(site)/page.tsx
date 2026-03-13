@@ -1,11 +1,7 @@
 import { Reveal } from "@/components/ui/reveal";
 import { QuoteStepper } from "@/components/site/quote-stepper";
-import { ARVOR_CONTACT_EMAIL, ARVOR_WHATSAPP_MESSAGE } from "@/lib/arvor";
+import { ARVOR_CONTACT_EMAIL, toWhatsappUrl } from "@/lib/arvor";
 import { CopyEmail } from "@/components/ui/copy-email";
-
-function toWhatsappUrl() {
-  return `https://wa.me/?text=${encodeURIComponent(ARVOR_WHATSAPP_MESSAGE)}`;
-}
 
 export default function HomePage() {
   return (

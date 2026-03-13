@@ -12,13 +12,31 @@ const raleway = Raleway({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://www.arvorin.com.br";
+const DESCRIPTION =
+  "Corretora sustentável especializada em planos de saúde empresarial e seguro de vida.";
+
 export const metadata: Metadata = {
   title: {
     default: "Arvor Insurance",
     template: "%s | Arvor Insurance",
   },
-  description:
-    "Corretora sustentável especializada em planos de saúde empresarial e seguro de vida.",
+  description: DESCRIPTION,
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Arvor Insurance",
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: "Arvor Insurance",
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Arvor Insurance",
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

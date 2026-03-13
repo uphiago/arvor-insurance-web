@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { ARVOR_WHATSAPP_MESSAGE } from "@/lib/arvor";
+import { toWhatsappUrl } from "@/lib/arvor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -184,10 +184,6 @@ function modalityLabel(modality: Modality) {
   return selected?.title ?? modality;
 }
 
-function toWhatsappUrl() {
-  return `https://wa.me/?text=${encodeURIComponent(ARVOR_WHATSAPP_MESSAGE)}`;
-}
-
 export function QuoteStepper() {
   const [step, setStep] = useState(1);
   const [stepOneData, setStepOneData] = useState<StepOneData | null>(null);
@@ -267,6 +263,9 @@ export function QuoteStepper() {
       return;
     }
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+
     setSubmitStatus("loading");
     setSubmitMessage("Enviando solicitação...");
 
@@ -282,6 +281,7 @@ export function QuoteStepper() {
           region: stepTwoData.region,
           modality: modalityLabel(stepTwoData.modality),
         }),
+        signal: controller.signal,
       });
 
       if (response.ok) {
@@ -296,11 +296,16 @@ export function QuoteStepper() {
       setSubmitMessage(
         "Não foi possível enviar automaticamente. Tente novamente em instantes.",
       );
-    } catch {
+    } catch (err) {
+      const timedOut = err instanceof Error && err.name === "AbortError";
       setSubmitStatus("error");
       setSubmitMessage(
-        "Não foi possível enviar automaticamente. Tente novamente em instantes.",
+        timedOut
+          ? "A solicitação demorou muito. Verifique sua conexão e tente novamente."
+          : "Não foi possível enviar automaticamente. Tente novamente em instantes.",
       );
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
@@ -333,7 +338,7 @@ export function QuoteStepper() {
                   ? "border-[#8fa286] bg-[#8fa286] text-[#2f3c4c]"
                   : active
                     ? "border-[#ae905e] bg-[#ae905e]/20 text-[#2f3c4c]"
-                    : "border-[#2f3c4c]/20 bg-[#e5ddc9] text-[#2f3c4c]/70"
+                    : "border-[#2f3c4c]/20 bg-[#e5ddc9] text-[#2f3c4c]/85"
               }`}
             >
               {done ? "✓ " : ""}

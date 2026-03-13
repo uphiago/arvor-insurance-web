@@ -9,7 +9,17 @@ const quoteRequestSchema = z.object({
   modality: z.string().min(2),
 });
 
+const ALLOWED_ORIGINS = [
+  "https://www.arvorin.com.br",
+  "https://arvorin.com.br",
+];
+
 export async function POST(request: Request) {
+  const origin = request.headers.get("origin");
+  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    return Response.json({ error: "Origem não permitida." }, { status: 403 });
+  }
+
   try {
     const payload = quoteRequestSchema.parse(await request.json());
     const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
