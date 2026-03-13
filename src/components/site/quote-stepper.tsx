@@ -341,10 +341,18 @@ export function QuoteStepper() {
         })}
       </div>
 
+      <div className="mt-2 h-1 overflow-hidden rounded-full bg-[#2f3c4c]/10">
+        <div
+          className="h-full rounded-full bg-[#8fa286] transition-all duration-500 ease-out"
+          style={{ width: `${((step - 1) / (STEP_LABELS.length - 1)) * 100}%` }}
+        />
+      </div>
+
       <div className="mt-6 rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
         {step === 1 ? (
           <form
-            className="space-y-4"
+            key="step-1"
+            className="animate-step-in space-y-4"
             onSubmit={stepOneForm.handleSubmit(onSubmitStepOne)}
           >
             <div>
@@ -423,7 +431,8 @@ export function QuoteStepper() {
 
         {step === 2 ? (
           <form
-            className="space-y-4"
+            key="step-2"
+            className="animate-step-in space-y-4"
             onSubmit={stepTwoForm.handleSubmit(onSubmitStepTwo)}
           >
             <div>
@@ -500,7 +509,7 @@ export function QuoteStepper() {
         ) : null}
 
         {step === 3 && stepOneData && stepTwoData ? (
-          <div className="space-y-5">
+          <div key="step-3" className="animate-step-in space-y-5">
             <div className="grid gap-3 rounded-2xl bg-[#fffdf8] p-4 text-sm md:grid-cols-2">
               <p>
                 <strong>Nome:</strong> {stepOneData.fullName}

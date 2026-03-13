@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/ui/reveal";
 import { QuoteStepper } from "@/components/site/quote-stepper";
 import { ARVOR_CONTACT_EMAIL, ARVOR_WHATSAPP_MESSAGE } from "@/lib/arvor";
 
@@ -57,105 +58,136 @@ export default function HomePage() {
       </header>
 
       <main id="conteudo-principal">
-        <section
-          id="inicio"
-          className="mx-auto w-full max-w-6xl px-5 py-16 md:px-8 md:py-24"
-        >
-          <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-center">
-            <div className="space-y-6">
-              <p className="inline-block rounded-full border border-[#ae905e] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#ae905e]">
-                Corretora Sustentável
-              </p>
-              <h1 className="text-balance text-4xl font-semibold leading-tight md:text-5xl">
-                Soluções em saúde e vida para empresas e famílias.
-              </h1>
-              <p className="max-w-xl text-lg leading-relaxed text-[#2f3c4c]/80">
-                Atendimento consultivo para Plano de Saúde Empresarial e Seguro
-                de Vida, com propósito socioambiental no centro da operação.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="#autoatendimento"
-                  className="inline-flex items-center justify-center rounded-full bg-[#2f3c4c] px-6 py-3 text-center font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
-                >
-                  Cotar agora
-                </a>
-                <a
-                  href={toWhatsappUrl()}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-[#c5874a] px-6 py-3 text-center font-semibold text-[#c5874a] transition hover:bg-[#c5874a] hover:text-[#e5ddc9]"
-                >
-                  Falar com especialista
-                </a>
+        {/* Hero */}
+        <section id="inicio" className="relative overflow-hidden">
+          {/* Ambient blobs */}
+          <div className="animate-blob pointer-events-none absolute -top-32 -right-24 h-[32rem] w-[32rem] rounded-full bg-[#8fa286]/20 blur-3xl" />
+          <div className="animate-blob pointer-events-none absolute -bottom-16 -left-16 h-72 w-72 rounded-full bg-[#ae905e]/20 blur-3xl [animation-delay:-4s]" />
+
+          <div className="relative mx-auto w-full max-w-6xl px-5 py-16 md:px-8 md:py-28">
+            <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-center">
+              <div className="space-y-6">
+                <p className="animate-hero-item [animation-delay:80ms] inline-block rounded-full border border-[#ae905e] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#ae905e]">
+                  Corretora Sustentável
+                </p>
+                <h1 className="animate-hero-item [animation-delay:180ms] text-balance text-4xl font-semibold leading-tight md:text-5xl">
+                  Soluções em saúde e vida para empresas e famílias.
+                </h1>
+                <p className="animate-hero-item [animation-delay:280ms] max-w-xl text-lg leading-relaxed text-[#2f3c4c]/80">
+                  Atendimento consultivo para Plano de Saúde Empresarial e
+                  Seguro de Vida, com propósito socioambiental no centro da
+                  operação.
+                </p>
+                <div className="animate-hero-item [animation-delay:360ms] flex flex-col gap-3 sm:flex-row">
+                  <a
+                    href="#autoatendimento"
+                    className="inline-flex items-center justify-center rounded-full bg-[#2f3c4c] px-6 py-3 text-center font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
+                  >
+                    Cotar agora
+                  </a>
+                  <a
+                    href={toWhatsappUrl()}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-full border border-[#c5874a] px-6 py-3 text-center font-semibold text-[#c5874a] transition hover:bg-[#c5874a] hover:text-[#e5ddc9]"
+                  >
+                    Falar com especialista
+                  </a>
+                </div>
+              </div>
+              <div className="animate-hero-item [animation-delay:320ms] rounded-3xl border border-[#ae905e]/65 bg-[#2f3c4c]/88 p-8 text-[#e5ddc9] shadow-xl backdrop-blur-xl">
+                <p className="text-sm uppercase tracking-wider text-[#8fa286]">
+                  Diferencial Arvor
+                </p>
+                <h2 className="mt-3 text-balance text-2xl font-semibold">
+                  Proteção com impacto positivo
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-[#e5ddc9]/90">
+                  Parte do FCF da corretora é destinada a iniciativas
+                  socioambientais, reforçando crescimento, proteção e
+                  longevidade.
+                </p>
               </div>
             </div>
-            <div className="rounded-3xl border border-[#ae905e]/65 bg-[#2f3c4c]/88 p-8 text-[#e5ddc9] shadow-xl backdrop-blur-xl">
-              <p className="text-sm uppercase tracking-wider text-[#8fa286]">
-                Diferencial Arvor
+          </div>
+        </section>
+
+        {/* Sobre */}
+        <section id="sobre" className="bg-[#2f3c4c]/90 py-16 text-[#e5ddc9]">
+          <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
+            <Reveal className="mb-8">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-[#8fa286]">
+                Quem somos
               </p>
-              <h2 className="mt-3 text-balance text-2xl font-semibold">
-                Proteção com impacto positivo
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-[#e5ddc9]/90">
-                Parte do FCF da corretora é destinada a iniciativas
-                socioambientais, reforçando crescimento, proteção e longevidade.
-              </p>
+            </Reveal>
+            <div className="grid gap-6 md:grid-cols-3">
+              {[
+                {
+                  num: "01",
+                  title: "Missão",
+                  desc: "Estruturar soluções em saúde e benefícios com atendimento próximo e responsável para empresas e famílias.",
+                },
+                {
+                  num: "02",
+                  title: "Proposta de Valor",
+                  desc: "Redução de absenteísmo, retenção de talentos e aumento de produtividade com desenho de benefícios aderente ao contexto de cada cliente.",
+                },
+                {
+                  num: "03",
+                  title: "Abrangência",
+                  desc: "Atendimento nacional para PF, Coletivo por Adesão, PJ e MEI com apoio consultivo em toda a jornada.",
+                },
+              ].map((item, i) => (
+                <Reveal key={item.title} delay={(i as 0 | 1 | 2) + 1}>
+                  <article className="relative overflow-hidden rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#e5ddc9]/15 hover:shadow-lg">
+                    <span className="pointer-events-none absolute right-4 bottom-2 select-none text-7xl font-bold leading-none text-[#e5ddc9]/[0.07]">
+                      {item.num}
+                    </span>
+                    <h2 className="relative text-balance text-xl font-semibold">
+                      {item.title}
+                    </h2>
+                    <p className="mt-3 text-sm leading-relaxed text-[#e5ddc9]/85">
+                      {item.desc}
+                    </p>
+                  </article>
+                </Reveal>
+              ))}
             </div>
           </div>
         </section>
 
-        <section id="sobre" className="bg-[#2f3c4c]/90 py-16 text-[#e5ddc9]">
-          <div className="mx-auto grid w-full max-w-6xl gap-8 px-5 md:grid-cols-3 md:px-8">
-            <article className="rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md">
-              <h2 className="text-balance text-xl font-semibold">Missão</h2>
-              <p className="mt-3 text-sm leading-relaxed text-[#e5ddc9]/85">
-                Estruturar soluções em saúde e benefícios com atendimento
-                próximo e responsável para empresas e famílias.
-              </p>
-            </article>
-            <article className="rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md">
-              <h2 className="text-balance text-xl font-semibold">
-                Proposta de Valor
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-[#e5ddc9]/85">
-                Redução de absenteísmo, retenção de talentos e aumento de
-                produtividade com desenho de benefícios aderente ao contexto de
-                cada cliente.
-              </p>
-            </article>
-            <article className="rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md">
-              <h2 className="text-balance text-xl font-semibold">
-                Abrangência
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-[#e5ddc9]/85">
-                Atendimento nacional para PF, Coletivo por Adesão, PJ e MEI com
-                apoio consultivo em toda a jornada.
-              </p>
-            </article>
-          </div>
-        </section>
-
+        {/* Sustentável */}
         <section
           id="sustentavel"
           className="mx-auto w-full max-w-6xl px-5 py-16 md:px-8"
         >
-          <h2 className="text-balance text-3xl font-semibold">
-            Projeto Sustentável
-          </h2>
-          <p className="mt-4 max-w-2xl leading-relaxed text-[#2f3c4c]/80">
-            O propósito socioambiental da Arvor está integrado ao modelo de
-            negócio: parte dos resultados é direcionada a ONGs, tornando cada
-            contratação também uma contribuição para iniciativas de impacto.
-          </p>
+          <Reveal>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-[#8fa286]">
+              Nossa causa
+            </p>
+            <h2 className="text-balance text-3xl font-semibold">
+              Projeto Sustentável
+            </h2>
+            <p className="mt-4 max-w-2xl leading-relaxed text-[#2f3c4c]/80">
+              O propósito socioambiental da Arvor está integrado ao modelo de
+              negócio: parte dos resultados é direcionada a ONGs, tornando cada
+              contratação também uma contribuição para iniciativas de impacto.
+            </p>
+          </Reveal>
         </section>
 
+        {/* Produtos */}
         <section
           id="produtos"
           className="mx-auto w-full max-w-6xl px-5 py-16 md:px-8"
         >
-          <h2 className="text-balance text-3xl font-semibold">Produtos</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <Reveal className="mb-8">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-[#8fa286]">
+              O que oferecemos
+            </p>
+            <h2 className="text-balance text-3xl font-semibold">Produtos</h2>
+          </Reveal>
+          <div className="grid gap-4 md:grid-cols-3">
             {[
               {
                 title: "Plano de Saúde Empresarial",
@@ -169,54 +201,66 @@ export default function HomePage() {
                 title: "Seguro de Vida",
                 desc: "Proteção para colaboradores e famílias, com coberturas ajustadas ao contexto de cada empresa.",
               },
-            ].map((item) => (
-              <article
-                key={item.title}
-                className="rounded-2xl border border-[#ae905e]/65 bg-[#f9f5ea]/55 p-6 shadow-lg backdrop-blur-md"
-              >
-                <h3 className="text-balance text-xl font-semibold">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-[#2f3c4c]/80">
-                  {item.desc}
-                </p>
-              </article>
+            ].map((item, i) => (
+              <Reveal key={item.title} delay={(i as 0 | 1 | 2) + 1}>
+                <article className="rounded-2xl border border-[#ae905e]/65 bg-[#f9f5ea]/55 p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-[#ae905e] hover:shadow-xl">
+                  <h3 className="text-balance text-xl font-semibold">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-[#2f3c4c]/80">
+                    {item.desc}
+                  </p>
+                </article>
+              </Reveal>
             ))}
           </div>
         </section>
 
+        {/* Como funciona */}
         <section
           id="como-funciona"
           className="bg-[#2f3c4c]/92 py-16 text-[#e5ddc9]"
         >
           <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
-            <h2 className="text-balance text-3xl font-semibold">
-              Como funciona
-            </h2>
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
+            <Reveal className="mb-8">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-[#8fa286]">
+                Processo
+              </p>
+              <h2 className="text-balance text-3xl font-semibold">
+                Como funciona
+              </h2>
+            </Reveal>
+            <div className="grid gap-4 md:grid-cols-3">
               {[
                 {
-                  step: "1. Cotar",
+                  num: "01",
+                  step: "Cotar",
                   desc: "Preencha o formulário em 3 etapas com seus dados e preferências de plano.",
                 },
                 {
-                  step: "2. Escolher",
+                  num: "02",
+                  step: "Escolher",
                   desc: "Nossa equipe apresenta as melhores opções para o seu perfil e orçamento.",
                 },
                 {
-                  step: "3. Contratar",
+                  num: "03",
+                  step: "Contratar",
                   desc: "Assinatura digital e envio de documentos com suporte consultivo completo.",
                 },
-              ].map((item) => (
-                <div
-                  key={item.step}
-                  className="rounded-2xl border border-[#8fa286]/45 bg-[#e5ddc9]/10 p-6 backdrop-blur-md"
-                >
-                  <p className="text-xl font-semibold">{item.step}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-[#e5ddc9]/75">
-                    {item.desc}
-                  </p>
-                </div>
+              ].map((item, i) => (
+                <Reveal key={item.step} delay={(i as 0 | 1 | 2) + 1}>
+                  <div className="relative overflow-hidden rounded-2xl border border-[#8fa286]/45 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#e5ddc9]/15">
+                    <span className="pointer-events-none absolute right-3 bottom-2 select-none text-7xl font-bold leading-none text-[#e5ddc9]/[0.08] tabular-nums">
+                      {item.num}
+                    </span>
+                    <p className="relative text-xl font-semibold">
+                      {item.step}
+                    </p>
+                    <p className="relative mt-2 text-sm leading-relaxed text-[#e5ddc9]/75">
+                      {item.desc}
+                    </p>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
