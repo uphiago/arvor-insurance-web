@@ -308,8 +308,10 @@ export function QuoteStepper() {
       id="autoatendimento"
       className="mx-auto w-full max-w-4xl px-5 py-16 md:px-8"
     >
-      <h2 className="text-3xl font-semibold">Autoatendimento de Cotação</h2>
-      <p className="mt-2 text-sm text-[#2f3c4c]/80">
+      <h2 className="text-balance text-3xl font-semibold">
+        Autoatendimento de Cotação
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed text-[#2f3c4c]/80">
         Preencha os dados em 3 etapas. Ao concluir, registramos sua solicitação
         e a equipe entra em contato.
       </p>
@@ -339,7 +341,7 @@ export function QuoteStepper() {
         })}
       </div>
 
-      <div className="mt-6 min-h-[560px] rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
+      <div className="mt-6 rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
         {step === 1 ? (
           <form
             className="space-y-4"
@@ -425,31 +427,29 @@ export function QuoteStepper() {
             onSubmit={stepTwoForm.handleSubmit(onSubmitStepTwo)}
           >
             <div>
-              <div>
-                <Label htmlFor="state">Estado</Label>
-                <select
-                  id="state"
-                  name="state"
-                  autoComplete="address-level1"
-                  className="mt-1 flex h-11 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2 text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8fa286]/45"
-                  value={watchedState ?? ""}
-                  onChange={(event) => {
-                    stepTwoForm.setValue("state", event.target.value, {
-                      shouldValidate: true,
-                    });
-                  }}
-                >
-                  <option value="">Selecione</option>
-                  {UF_LIST.map((item) => (
-                    <option key={item.uf} value={item.uf}>
-                      {item.name} ({item.uf})
-                    </option>
-                  ))}
-                </select>
-                <p className="mt-1 min-h-4 text-xs text-[#c5874a]">
-                  {stepTwoForm.formState.errors.state?.message ?? ""}
-                </p>
-              </div>
+              <Label htmlFor="state">Estado</Label>
+              <select
+                id="state"
+                name="state"
+                autoComplete="address-level1"
+                className="mt-1 flex h-11 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2 text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8fa286]/45"
+                value={watchedState ?? ""}
+                onChange={(event) => {
+                  stepTwoForm.setValue("state", event.target.value, {
+                    shouldValidate: true,
+                  });
+                }}
+              >
+                <option value="">Selecione</option>
+                {UF_LIST.map((item) => (
+                  <option key={item.uf} value={item.uf}>
+                    {item.name} ({item.uf})
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 min-h-4 text-xs text-[#c5874a]">
+                {stepTwoForm.formState.errors.state?.message ?? ""}
+              </p>
             </div>
 
             <div>
@@ -458,7 +458,7 @@ export function QuoteStepper() {
                 {MODALITIES.map((item) => (
                   <label
                     key={item.value}
-                    className={`flex h-36 cursor-pointer flex-col rounded-2xl border p-4 transition ${
+                    className={`flex min-h-36 cursor-pointer flex-col rounded-2xl border p-4 transition ${
                       watchedModality === item.value
                         ? "border-[#8fa286] bg-[#8fa286]/15"
                         : "border-[#2f3c4c]/20 bg-[#fffdf8]"
