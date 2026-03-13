@@ -37,7 +37,7 @@ a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--arvor-green);
+  outline: 2px solid var(--arvor-gold);
   outline-offset: 2px;
 }
 

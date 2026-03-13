@@ -348,7 +348,7 @@ export function QuoteStepper() {
         />
       </div>
 
-      <div className="mt-6 rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
+      <div className="mt-6 min-h-[480px] rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
         {step === 1 ? (
           <form
             key="step-1"
@@ -441,7 +441,7 @@ export function QuoteStepper() {
                 id="state"
                 name="state"
                 autoComplete="address-level1"
-                className="mt-1 flex h-11 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2 text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8fa286]/45"
+                className="mt-1 flex h-11 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2 text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ae905e]/50"
                 value={watchedState ?? ""}
                 onChange={(event) => {
                   stepTwoForm.setValue("state", event.target.value, {

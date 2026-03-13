@@ -138,8 +138,12 @@ export default function HomePage() {
                   desc: "Atendimento nacional para PF, Coletivo por Adesão, PJ e MEI com apoio consultivo em toda a jornada.",
                 },
               ].map((item, i) => (
-                <Reveal key={item.title} delay={(i + 1) as 1 | 2 | 3}>
-                  <article className="relative overflow-hidden rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#e5ddc9]/15 hover:shadow-lg">
+                <Reveal
+                  key={item.title}
+                  delay={(i + 1) as 1 | 2 | 3}
+                  className="h-full"
+                >
+                  <article className="relative h-full overflow-hidden rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#e5ddc9]/15 hover:shadow-lg">
                     <span className="pointer-events-none absolute right-4 bottom-2 select-none text-7xl font-bold leading-none text-[#e5ddc9]/[0.07]">
                       {item.num}
                     </span>
@@ -202,8 +206,12 @@ export default function HomePage() {
                 desc: "Proteção para colaboradores e famílias, com coberturas ajustadas ao contexto de cada empresa.",
               },
             ].map((item, i) => (
-              <Reveal key={item.title} delay={(i + 1) as 1 | 2 | 3}>
-                <article className="rounded-2xl border border-[#ae905e]/65 bg-[#f9f5ea]/55 p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-[#ae905e] hover:shadow-xl">
+              <Reveal
+                key={item.title}
+                delay={(i + 1) as 1 | 2 | 3}
+                className="h-full"
+              >
+                <article className="h-full rounded-2xl border border-[#ae905e]/65 bg-[#f9f5ea]/55 p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-[#ae905e] hover:shadow-xl">
                   <h3 className="text-balance text-xl font-semibold">
                     {item.title}
                   </h3>
