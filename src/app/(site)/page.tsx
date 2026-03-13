@@ -56,7 +56,7 @@ export default function HomePage() {
               href={toWhatsappUrl()}
               target="_blank"
               rel="noreferrer"
-              className="cursor-pointer rounded-full border border-[#8fa286]/80 bg-[#8fa286]/80 px-4 py-2 text-sm font-semibold text-[#2f3c4c] shadow-sm transition hover:bg-[#7c8f75]"
+              className="hidden cursor-pointer rounded-full border border-[#8fa286]/80 bg-[#8fa286]/80 px-4 py-2 text-sm font-semibold text-[#2f3c4c] shadow-sm transition hover:bg-[#7c8f75] md:inline-flex"
             >
               Falar com Especialista
             </a>
