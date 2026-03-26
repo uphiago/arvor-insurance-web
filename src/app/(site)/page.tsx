@@ -24,7 +24,7 @@ export default function HomePage() {
             <img
               src="/logo-type.png"
               alt="Arvor Insurance"
-              className="h-[120px] w-auto object-contain"
+              className="h-[90px] w-auto translate-y-2 object-contain"
             />
           </SmoothLink>
           <nav
