@@ -84,11 +84,13 @@ export default function HomePage() {
                 Corretora Sustentável
               </p>
               <h1 className="animate-hero-item [animation-delay:180ms] text-balance text-4xl font-semibold leading-tight text-[#e5ddc9] md:text-5xl">
-                Soluções em saúde e vida para empresas e famílias.
+                Cuide da sua Saúde e do Planeta, conheça a Arvor.
               </h1>
               <p className="animate-hero-item [animation-delay:280ms] text-lg leading-relaxed text-[#e5ddc9]/85">
-                Atendimento consultivo para Plano de Saúde Empresarial e Seguro
-                de Vida, com propósito socioambiental no centro da operação.
+                A Arvor Insurance é uma corretora especializada em planos de
+                saúde empresarial e individual, com um diferencial de propósito:
+                parte dos resultados é direcionada a iniciativas
+                socioambientais, reforçando o conceito de Corretora Sustentável.
               </p>
               <div className="animate-hero-item [animation-delay:360ms] flex flex-col gap-3 sm:flex-row">
                 <SmoothLink
@@ -123,17 +125,17 @@ export default function HomePage() {
                 {
                   num: "01",
                   title: "Missão",
-                  desc: "Estruturar soluções em saúde e benefícios com atendimento próximo e responsável para empresas e famílias.",
+                  desc: "Estruturar soluções em saúde e benefícios para empresas e famílias, com atendimento consultivo, próximo e responsável, promovendo segurança, bem-estar, confiança e impacto positivo na vida das pessoas.",
                 },
                 {
                   num: "02",
-                  title: "Proposta de Valor",
-                  desc: "Redução de absenteísmo, retenção de talentos e aumento de produtividade com desenho de benefícios aderente ao contexto de cada cliente.",
+                  title: "Visão",
+                  desc: "Ser referência em soluções de seguros, saúde e benefícios, reconhecida pela atuação consultiva, sustentável e humana, gerando proteção, confiança e valor duradouro para empresas, famílias e para a sociedade.",
                 },
                 {
                   num: "03",
-                  title: "Abrangência",
-                  desc: "Atendimento nacional para PF, Coletivo por Adesão, PJ e MEI com apoio consultivo em toda a jornada.",
+                  title: "Valores",
+                  desc: "Ética, transparência, sustentabilidade e excelência definem a forma como a Arvor Insurance constrói relações sólidas e entrega soluções com responsabilidade, confiança e alto padrão de atendimento.",
                 },
               ].map((item, i) => (
                 <Reveal
@@ -217,15 +219,15 @@ export default function HomePage() {
             {[
               {
                 title: "Plano de Saúde Empresarial",
-                desc: "Cobertura para equipes de qualquer porte, com foco em rede credenciada, custo e perfil do colaborador.",
+                desc: "Cobertura para empresas, com foco em retenção de talentos, aumento de produtividade, ajudando a reduzir o absenteísmo e presenteísmo nas organizações.",
               },
               {
                 title: "Coletivo por Adesão",
                 desc: "Planos acessíveis via associação ou diploma, ideais para profissionais liberais e autônomos.",
               },
               {
-                title: "Seguro de Vida",
-                desc: "Proteção para colaboradores e famílias, com coberturas ajustadas ao contexto de cada empresa.",
+                title: "Plano de Saúde Individual",
+                desc: "Planos individuais ou familiares personalizados, com coberturas ajustadas ao contexto de cada um.",
               },
             ].map((item, i) => (
               <Reveal
@@ -306,10 +308,10 @@ export default function HomePage() {
                 Atendimento consultivo
               </p>
               <h2 className="text-balance text-3xl font-semibold">
-                Prefere falar com um especialista?
+                Fale com um especialista da Arvor.
               </h2>
               <p className="mt-4 max-w-xl leading-relaxed text-[#e5ddc9]/80">
-                Para empresas, casos complexos ou quem prefere orientação
+                Para quem prefere o atendimento humano e orientação
                 personalizada — nossa equipe está pronta para apresentar as
                 melhores opções para o seu perfil.
               </p>
