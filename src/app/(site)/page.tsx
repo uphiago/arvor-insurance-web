@@ -68,47 +68,43 @@ export default function HomePage() {
       <main id="conteudo-principal">
         {/* Hero */}
         <section id="inicio" className="relative overflow-hidden">
-          {/* Ambient blobs */}
-          <div className="animate-blob pointer-events-none absolute -top-32 -right-24 h-[32rem] w-[32rem] rounded-full bg-[#8fa286]/20 blur-3xl" />
-          <div className="animate-blob pointer-events-none absolute -bottom-16 -left-16 h-72 w-72 rounded-full bg-[#ae905e]/20 blur-3xl [animation-delay:-4s]" />
+          {/* Background image */}
+          <img
+            src="/hero-image-full.png"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {/* Overlay gradient for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2f3c4c]/80 via-[#2f3c4c]/55 to-transparent" />
 
-          <div className="relative mx-auto w-full max-w-6xl px-5 py-16 md:px-8 md:py-28">
-            <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-center">
-              <div className="space-y-6">
-                <p className="animate-hero-item [animation-delay:80ms] inline-block rounded-full border border-[#ae905e] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#ae905e]">
-                  Corretora Sustentável
-                </p>
-                <h1 className="animate-hero-item [animation-delay:180ms] text-balance text-4xl font-semibold leading-tight md:text-5xl">
-                  Soluções em saúde e vida para empresas e famílias.
-                </h1>
-                <p className="animate-hero-item [animation-delay:280ms] max-w-xl text-lg leading-relaxed text-[#2f3c4c]/80">
-                  Atendimento consultivo para Plano de Saúde Empresarial e
-                  Seguro de Vida, com propósito socioambiental no centro da
-                  operação.
-                </p>
-                <div className="animate-hero-item [animation-delay:360ms] flex flex-col gap-3 sm:flex-row">
-                  <SmoothLink
-                    to="autoatendimento"
-                    className="inline-flex items-center justify-center rounded-full bg-[#2f3c4c] px-6 py-3 text-center font-semibold text-[#e5ddc9] transition hover:bg-[#24303d]"
-                  >
-                    Cotar agora
-                  </SmoothLink>
-                  <a
-                    href={toWhatsappUrl()}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center rounded-full border border-[#c5874a] px-6 py-3 text-center font-semibold text-[#c5874a] transition hover:bg-[#c5874a] hover:text-[#e5ddc9]"
-                  >
-                    Falar com especialista
-                  </a>
-                </div>
-              </div>
-              <div className="animate-hero-item [animation-delay:320ms] overflow-hidden rounded-3xl border border-[#ae905e]/65 shadow-xl">
-                <img
-                  src="/hero-image.png"
-                  alt="Proteção com impacto positivo — Arvor Insurance"
-                  className="h-full w-full object-cover"
-                />
+          <div className="relative mx-auto w-full max-w-6xl px-5 py-20 md:px-8 md:py-36">
+            <div className="max-w-xl space-y-6">
+              <p className="animate-hero-item [animation-delay:80ms] inline-block rounded-full border border-[#ae905e] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#ae905e]">
+                Corretora Sustentável
+              </p>
+              <h1 className="animate-hero-item [animation-delay:180ms] text-balance text-4xl font-semibold leading-tight text-[#e5ddc9] md:text-5xl">
+                Soluções em saúde e vida para empresas e famílias.
+              </h1>
+              <p className="animate-hero-item [animation-delay:280ms] text-lg leading-relaxed text-[#e5ddc9]/85">
+                Atendimento consultivo para Plano de Saúde Empresarial e Seguro
+                de Vida, com propósito socioambiental no centro da operação.
+              </p>
+              <div className="animate-hero-item [animation-delay:360ms] flex flex-col gap-3 sm:flex-row">
+                <SmoothLink
+                  to="autoatendimento"
+                  className="inline-flex items-center justify-center rounded-full bg-[#e5ddc9] px-6 py-3 text-center font-semibold text-[#2f3c4c] transition hover:bg-[#d9d1bc]"
+                >
+                  Cotar agora
+                </SmoothLink>
+                <a
+                  href={toWhatsappUrl()}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center rounded-full border border-[#e5ddc9]/70 px-6 py-3 text-center font-semibold text-[#e5ddc9] transition hover:bg-[#e5ddc9]/15"
+                >
+                  Falar com especialista
+                </a>
               </div>
             </div>
           </div>

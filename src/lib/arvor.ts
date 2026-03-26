@@ -10,7 +10,7 @@ export const ARVOR_INSTAGRAM =
 
 export const ARVOR_LINKEDIN =
   process.env.NEXT_PUBLIC_LINKEDIN_URL ??
-  "https://linkedin.com/company/arvor-insurance";
+  "https://www.linkedin.com/company/arvor-in/";
 
 export const ARVOR_CNPJ = process.env.NEXT_PUBLIC_CNPJ ?? "XX.XXX.XXX/0001-XX";
 
