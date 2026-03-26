@@ -92,7 +92,7 @@ export default function HomePage() {
           <div className="relative mx-auto w-full max-w-6xl px-5 py-20 md:px-8 md:py-36">
             <div className="max-w-xl space-y-6">
               <p className="animate-hero-item [animation-delay:80ms] inline-block rounded-full border border-[#ae905e] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#ae905e]">
-                Corretora Sustentável
+                Primeira Corretora Sustentável do Brasil
               </p>
               <h1 className="animate-hero-item [animation-delay:180ms] text-balance text-4xl font-semibold leading-tight text-[#e5ddc9] md:text-5xl">
                 Cuide da sua Saúde e do Planeta, conheça a Arvor.
