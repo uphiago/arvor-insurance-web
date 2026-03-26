@@ -12,7 +12,7 @@ export const ARVOR_LINKEDIN =
   process.env.NEXT_PUBLIC_LINKEDIN_URL ??
   "https://www.linkedin.com/company/arvor-in/";
 
-export const ARVOR_CNPJ = process.env.NEXT_PUBLIC_CNPJ ?? "XX.XXX.XXX/0001-XX";
+export const ARVOR_CNPJ = process.env.NEXT_PUBLIC_CNPJ ?? "65.597.264/0001-10";
 
 export const ARVOR_WHATSAPP_MESSAGE =
   "Olá! Gostaria de falar com um especialista da Arvor Insurance sobre planos de saúde.";

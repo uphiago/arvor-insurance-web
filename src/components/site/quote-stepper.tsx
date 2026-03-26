@@ -4,13 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { ARVOR_CONTACT_EMAIL, toWhatsappUrl } from "@/lib/arvor";
-import { CopyEmail } from "@/components/ui/copy-email";
+import { toWhatsappUrl } from "@/lib/arvor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const STEP_LABELS = ["Sobre você", "Sobre o plano", "Contratação"];
+const STEP_LABELS = ["Sobre você", "Sobre o plano", "Solicitar Cotação"];
 
 const MODALITIES = [
   {
@@ -21,7 +20,8 @@ const MODALITIES = [
   {
     value: "adesao",
     title: "Coletivo por Adesão",
-    description: "Planos via associação/diploma. (Mínimo 1 pessoa)",
+    description:
+      "Contratado por meio de uma entidade de classe ou associação profissional, com intermediação de uma administradora de benefícios.",
   },
   {
     value: "pj",
@@ -36,66 +36,6 @@ const MODALITIES = [
   },
 ] as const;
 type Modality = (typeof MODALITIES)[number]["value"];
-
-const UF_LIST = [
-  { uf: "AC", name: "Acre" },
-  { uf: "AL", name: "Alagoas" },
-  { uf: "AP", name: "Amapá" },
-  { uf: "AM", name: "Amazonas" },
-  { uf: "BA", name: "Bahia" },
-  { uf: "CE", name: "Ceará" },
-  { uf: "DF", name: "Distrito Federal" },
-  { uf: "ES", name: "Espírito Santo" },
-  { uf: "GO", name: "Goiás" },
-  { uf: "MA", name: "Maranhão" },
-  { uf: "MT", name: "Mato Grosso" },
-  { uf: "MS", name: "Mato Grosso do Sul" },
-  { uf: "MG", name: "Minas Gerais" },
-  { uf: "PA", name: "Pará" },
-  { uf: "PB", name: "Paraíba" },
-  { uf: "PR", name: "Paraná" },
-  { uf: "PE", name: "Pernambuco" },
-  { uf: "PI", name: "Piauí" },
-  { uf: "RJ", name: "Rio de Janeiro" },
-  { uf: "RN", name: "Rio Grande do Norte" },
-  { uf: "RS", name: "Rio Grande do Sul" },
-  { uf: "RO", name: "Rondônia" },
-  { uf: "RR", name: "Roraima" },
-  { uf: "SC", name: "Santa Catarina" },
-  { uf: "SP", name: "São Paulo" },
-  { uf: "SE", name: "Sergipe" },
-  { uf: "TO", name: "Tocantins" },
-] as const;
-
-const REGION_BY_UF: Record<string, string[]> = {
-  AC: ["Norte"],
-  AL: ["Nordeste"],
-  AP: ["Norte"],
-  AM: ["Norte"],
-  BA: ["Nordeste"],
-  CE: ["Nordeste"],
-  DF: ["Centro-Oeste"],
-  ES: ["Sudeste"],
-  GO: ["Centro-Oeste"],
-  MA: ["Nordeste"],
-  MT: ["Centro-Oeste"],
-  MS: ["Centro-Oeste"],
-  MG: ["Sudeste"],
-  PA: ["Norte"],
-  PB: ["Nordeste"],
-  PR: ["Sul"],
-  PE: ["Nordeste"],
-  PI: ["Nordeste"],
-  RJ: ["Sudeste"],
-  RN: ["Nordeste"],
-  RS: ["Sul"],
-  RO: ["Norte"],
-  RR: ["Norte"],
-  SC: ["Sul"],
-  SP: ["Sudeste"],
-  SE: ["Nordeste"],
-  TO: ["Norte"],
-};
 
 const STEP_ONE_SCHEMA = z.object({
   fullName: z
@@ -120,69 +60,28 @@ const STEP_ONE_SCHEMA = z.object({
 });
 
 const STEP_TWO_SCHEMA = z.object({
-  state: z.string().min(1, "Selecione o estado."),
   modality: z.string().min(1, "Selecione uma modalidade."),
 });
 
 type StepOneData = z.infer<typeof STEP_ONE_SCHEMA>;
 type StepTwoData = z.infer<typeof STEP_TWO_SCHEMA>;
 type StepTwoValidatedData = {
-  state: string;
-  region: string;
   modality: Modality;
-};
-
-const DOCUMENTS_BY_MODALITY: Record<Modality, string[]> = {
-  pf: [
-    "RG, CPF ou CNH",
-    "E-mail",
-    "Telefone",
-    "Comprovante de endereço",
-    "Selfie com documento",
-  ],
-  adesao: [
-    "RG, CPF ou CNH",
-    "E-mail",
-    "Telefone",
-    "Comprovante de endereço",
-    "Selfie com documento",
-    "Diploma acadêmico",
-  ],
-  pj: [
-    "Contrato social",
-    "RG, CPF ou CNH",
-    "E-mail",
-    "Telefone",
-    "Comprovante de endereço",
-  ],
-  mei: [
-    "Contrato social",
-    "RG, CPF ou CNH",
-    "E-mail",
-    "Telefone",
-    "Comprovante de endereço",
-  ],
+  personCount: number;
+  ages: string[];
 };
 
 function formatPhone(raw: string) {
   const digits = raw.replace(/\D/g, "").slice(0, 11);
-
-  if (digits.length <= 2) {
-    return digits ? `(${digits}` : "";
-  }
-  if (digits.length <= 6) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-  }
-  if (digits.length <= 10) {
+  if (digits.length <= 2) return digits ? `(${digits}` : "";
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10)
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-  }
-
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 }
 
 function modalityLabel(modality: Modality) {
-  const selected = MODALITIES.find((item) => item.value === modality);
-  return selected?.title ?? modality;
+  return MODALITIES.find((item) => item.value === modality)?.title ?? modality;
 }
 
 export function QuoteStepper() {
@@ -196,30 +95,22 @@ export function QuoteStepper() {
   >("idle");
   const [submitMessage, setSubmitMessage] = useState("");
 
+  const [personCount, setPersonCount] = useState(1);
+  const [ages, setAges] = useState<string[]>([""]);
+  const [ageError, setAgeError] = useState("");
+
   const stepOneForm = useForm<StepOneData>({
     resolver: zodResolver(STEP_ONE_SCHEMA),
     mode: "onChange",
-    defaultValues: {
-      fullName: "",
-      phone: "",
-      email: "",
-      acceptedTerms: false,
-    },
+    defaultValues: { fullName: "", phone: "", email: "", acceptedTerms: false },
   });
 
   const stepTwoForm = useForm<StepTwoData>({
     resolver: zodResolver(STEP_TWO_SCHEMA),
     mode: "onChange",
-    defaultValues: {
-      state: "",
-      modality: "",
-    },
+    defaultValues: { modality: "" },
   });
 
-  const watchedState = useWatch({
-    control: stepTwoForm.control,
-    name: "state",
-  });
   const watchedModality = useWatch({
     control: stepTwoForm.control,
     name: "modality",
@@ -229,16 +120,22 @@ export function QuoteStepper() {
     name: "phone",
   });
 
-  const selectedModality = stepTwoData?.modality
-    ? stepTwoData.modality
-    : MODALITIES.some((item) => item.value === watchedModality)
-      ? (watchedModality as Modality)
-      : undefined;
+  function changePersonCount(delta: number) {
+    const next = Math.max(1, personCount + delta);
+    setPersonCount(next);
+    setAges((prev) => {
+      if (next > prev.length)
+        return [...prev, ...Array<string>(next - prev.length).fill("")];
+      return prev.slice(0, next);
+    });
+    setAgeError("");
+  }
 
-  const docs =
-    selectedModality && DOCUMENTS_BY_MODALITY[selectedModality]
-      ? DOCUMENTS_BY_MODALITY[selectedModality]
-      : [];
+  function updateAge(index: number, value: string) {
+    const digits = value.replace(/\D/g, "").slice(0, 3);
+    setAges((prev) => prev.map((a, i) => (i === index ? digits : a)));
+    setAgeError("");
+  }
 
   function onSubmitStepOne(values: StepOneData) {
     setStepOneData(values);
@@ -246,13 +143,15 @@ export function QuoteStepper() {
   }
 
   function onSubmitStepTwo(values: StepTwoData) {
-    if (!MODALITIES.some((item) => item.value === values.modality)) {
+    if (!MODALITIES.some((item) => item.value === values.modality)) return;
+    if (ages.some((a) => a.trim() === "")) {
+      setAgeError("Informe a idade de todas as pessoas.");
       return;
     }
     setStepTwoData({
-      state: values.state,
-      region: REGION_BY_UF[values.state]?.[0] ?? "",
       modality: values.modality as Modality,
+      personCount,
+      ages,
     });
     setStep(3);
   }
@@ -266,9 +165,7 @@ export function QuoteStepper() {
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
-
     setSubmitStatus("loading");
-    setSubmitMessage("Enviando solicitação...");
 
     try {
       const response = await fetch("/api/quote", {
@@ -278,18 +175,15 @@ export function QuoteStepper() {
           name: stepOneData.fullName,
           phone: stepOneData.phone,
           email: stepOneData.email,
-          state: stepTwoData.state,
-          region: stepTwoData.region,
           modality: modalityLabel(stepTwoData.modality),
+          personCount: stepTwoData.personCount,
+          ages: stepTwoData.ages,
         }),
         signal: controller.signal,
       });
 
       if (response.ok) {
         setSubmitStatus("success");
-        setSubmitMessage(
-          "Solicitação registrada com sucesso. Nossa equipe retornará em até 24h úteis.",
-        );
         return;
       }
 
@@ -318,29 +212,30 @@ export function QuoteStepper() {
       <h2 className="text-balance text-3xl font-semibold">
         Autoatendimento de Cotação
       </h2>
-      <p className="mt-2 text-sm leading-relaxed text-[#2f3c4c]/80">
+      <p className="mt-2 text-sm leading-relaxed text-[#2f3c4c]/90">
         Preencha os dados em 3 etapas. Ao concluir, registramos sua solicitação
-        e a equipe entra em contato.
+        e a equipe entra em contato. Entraremos em contato em até 24h.
       </p>
 
+      {/* Step indicators */}
       <div className="mt-8 grid grid-cols-3 gap-2">
         {STEP_LABELS.map((label, index) => {
-          const currentStep = index + 1;
+          const n = index + 1;
           const allDone = submitStatus === "success";
-          const done = allDone || step > currentStep;
-          const active = !allDone && step === currentStep;
-
+          const done = allDone || step > n;
+          const active = !allDone && step === n;
           return (
             <div
               key={label}
               aria-current={active ? "step" : undefined}
-              className={`flex h-14 items-center justify-center rounded-xl border px-3 py-2 text-center text-xs font-semibold transition-all duration-300 md:text-sm ${
+              className={[
+                "flex h-14 items-center justify-center rounded-xl border px-3 py-2 text-center text-xs font-semibold transition-all duration-300 md:text-sm",
                 done
                   ? "border-[#8fa286] bg-[#8fa286] text-[#2f3c4c]"
                   : active
                     ? "border-[#ae905e] bg-[#ae905e]/20 text-[#2f3c4c]"
-                    : "border-[#2f3c4c]/20 bg-[#e5ddc9] text-[#2f3c4c]/85"
-              }`}
+                    : "border-[#2f3c4c]/20 bg-[#e5ddc9] text-[#2f3c4c]/85",
+              ].join(" ")}
             >
               {done ? "✓ " : ""}
               {label}
@@ -349,6 +244,7 @@ export function QuoteStepper() {
         })}
       </div>
 
+      {/* Progress bar */}
       <div className="mt-2 h-1 overflow-hidden rounded-full bg-[#2f3c4c]/10">
         <div
           className="h-full rounded-full bg-[#8fa286] transition-all duration-500 ease-out"
@@ -361,8 +257,10 @@ export function QuoteStepper() {
         />
       </div>
 
-      <div className="mt-6 min-h-[480px] rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
-        {step === 1 ? (
+      {/* Card */}
+      <div className="mt-6 rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
+        {/* ── Step 1 ── */}
+        {step === 1 && (
           <form
             key="step-1"
             className="animate-step-in space-y-4"
@@ -391,14 +289,10 @@ export function QuoteStepper() {
                 autoComplete="tel"
                 className="mt-1"
                 value={watchedPhone ?? ""}
-                onChange={(event) =>
-                  stepOneForm.setValue(
-                    "phone",
-                    formatPhone(event.target.value),
-                    {
-                      shouldValidate: true,
-                    },
-                  )
+                onChange={(e) =>
+                  stepOneForm.setValue("phone", formatPhone(e.target.value), {
+                    shouldValidate: true,
+                  })
                 }
               />
               <p className="mt-1 min-h-4 text-xs text-[#c5874a]">
@@ -440,51 +334,90 @@ export function QuoteStepper() {
               Avançar
             </Button>
           </form>
-        ) : null}
+        )}
 
-        {step === 2 ? (
+        {/* ── Step 2 ── */}
+        {step === 2 && (
           <form
             key="step-2"
-            className="animate-step-in space-y-4"
+            className="animate-step-in space-y-6"
             onSubmit={stepTwoForm.handleSubmit(onSubmitStepTwo)}
           >
+            {/* Contador de pessoas */}
             <div>
-              <Label htmlFor="state">Estado</Label>
-              <select
-                id="state"
-                name="state"
-                autoComplete="address-level1"
-                className="mt-1 flex h-11 w-full rounded-xl border border-[#2f3c4c]/20 bg-[#fffdf8] px-3 py-2 text-base md:text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ae905e]/50"
-                value={watchedState ?? ""}
-                onChange={(event) => {
-                  stepTwoForm.setValue("state", event.target.value, {
-                    shouldValidate: true,
-                  });
-                }}
-              >
-                <option value="">Selecione</option>
-                {UF_LIST.map((item) => (
-                  <option key={item.uf} value={item.uf}>
-                    {item.name} ({item.uf})
-                  </option>
-                ))}
-              </select>
-              <p className="mt-1 min-h-4 text-xs text-[#c5874a]">
-                {stepTwoForm.formState.errors.state?.message ?? ""}
+              <Label>Quantas pessoas serão incluídas no plano?</Label>
+              <p className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
+                Informe o número total de vidas que serão cobertas, incluindo
+                titulares e dependentes. Quanto mais vidas, melhores condições
+                podemos oferecer.
               </p>
+              <div className="mt-3 flex items-center gap-4">
+                <button
+                  type="button"
+                  aria-label="Diminuir"
+                  onClick={() => changePersonCount(-1)}
+                  disabled={personCount <= 1}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#2f3c4c]/25 bg-[#fffdf8] text-lg font-semibold transition-colors hover:bg-[#2f3c4c]/8 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  −
+                </button>
+                <span className="w-8 text-center text-xl font-semibold tabular-nums">
+                  {personCount}
+                </span>
+                <button
+                  type="button"
+                  aria-label="Aumentar"
+                  onClick={() => changePersonCount(1)}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#2f3c4c]/25 bg-[#fffdf8] text-lg font-semibold transition-colors hover:bg-[#2f3c4c]/8"
+                >
+                  +
+                </button>
+                <span className="text-sm text-[#2f3c4c]/75">
+                  {personCount === 1 ? "1 pessoa" : `${personCount} pessoas`}
+                </span>
+              </div>
             </div>
 
+            {/* Idades */}
+            <div>
+              <Label>Qual a idade de cada pessoa?</Label>
+              <p className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
+                Informe a idade de cada pessoa que será incluída no plano. A
+                idade influencia diretamente no valor da mensalidade.
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                {ages.map((age, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <Input
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="Idade"
+                      value={age}
+                      onChange={(e) => updateAge(i, e.target.value)}
+                      aria-label={`Idade da pessoa ${i + 1}`}
+                    />
+                    <span className="shrink-0 text-sm text-[#2f3c4c]/75">
+                      anos
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-1 min-h-4 text-xs text-[#c5874a]">{ageError}</p>
+            </div>
+
+            {/* Modalidade */}
             <fieldset>
               <legend className="text-sm font-semibold">Modalidade</legend>
               <div className="mt-2 grid gap-3 md:grid-cols-2">
                 {MODALITIES.map((item) => (
                   <label
                     key={item.value}
-                    className={`flex cursor-pointer flex-col rounded-2xl border p-3 transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#ae905e] has-[:focus-visible]:ring-offset-1 md:p-4 ${
+                    className={[
+                      "flex cursor-pointer flex-col rounded-2xl border p-3 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#ae905e] has-[:focus-visible]:ring-offset-1 md:p-4",
                       watchedModality === item.value
                         ? "border-[#8fa286] bg-[#8fa286]/15"
-                        : "border-[#2f3c4c]/20 bg-[#fffdf8]"
-                    }`}
+                        : "border-[#2f3c4c]/20 bg-[#fffdf8]",
+                    ].join(" ")}
                   >
                     <input
                       type="radio"
@@ -492,10 +425,8 @@ export function QuoteStepper() {
                       className="sr-only"
                       {...stepTwoForm.register("modality")}
                     />
-                    <p className="text-sm font-semibold md:text-base">
-                      {item.title}
-                    </p>
-                    <p className="mt-2 text-xs leading-relaxed text-[#2f3c4c]/80">
+                    <p className="text-sm font-semibold">{item.title}</p>
+                    <p className="mt-1.5 text-xs leading-relaxed text-[#2f3c4c]/80">
                       {item.description}
                     </p>
                   </label>
@@ -506,7 +437,7 @@ export function QuoteStepper() {
               </p>
             </fieldset>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <Button
                 type="button"
                 variant="outline"
@@ -519,13 +450,16 @@ export function QuoteStepper() {
               </Button>
             </div>
           </form>
-        ) : null}
+        )}
 
-        {step === 3 && stepOneData && stepTwoData ? (
-          submitStatus === "success" ? (
+        {/* ── Step 3 ── */}
+        {step === 3 &&
+          stepOneData &&
+          stepTwoData &&
+          (submitStatus === "success" ? (
             <div
               key="step-3-success"
-              className="animate-step-in flex min-h-[420px] flex-col items-center justify-center gap-5 text-center"
+              className="animate-step-in flex flex-col items-center justify-center gap-5 py-12 text-center"
             >
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#8fa286] text-3xl text-white">
                 ✓
@@ -541,13 +475,14 @@ export function QuoteStepper() {
                 href={toWhatsappUrl()}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c] transition hover:bg-[#8fa286]/30"
+                className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c] transition-colors hover:bg-[#8fa286]/30"
               >
                 Falar com especialista
               </a>
             </div>
           ) : (
             <div key="step-3" className="animate-step-in space-y-5">
+              {/* Resumo */}
               <div className="grid gap-3 rounded-2xl bg-[#fffdf8] p-4 text-sm md:grid-cols-2">
                 <p>
                   <strong>Nome:</strong> {stepOneData.fullName}
@@ -559,7 +494,10 @@ export function QuoteStepper() {
                   <strong>E-mail:</strong> {stepOneData.email}
                 </p>
                 <p>
-                  <strong>Estado:</strong> {stepTwoData.state}
+                  <strong>Pessoas:</strong> {stepTwoData.personCount}
+                </p>
+                <p>
+                  <strong>Idades:</strong> {stepTwoData.ages.join(", ")} anos
                 </p>
                 <p className="md:col-span-2">
                   <strong>Modalidade:</strong>{" "}
@@ -567,28 +505,15 @@ export function QuoteStepper() {
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-[#fffdf8] p-4">
-                <h3 className="text-lg font-semibold">
-                  Documentos necessários
-                </h3>
-                <ul className="mt-3 list-inside list-disc space-y-1 text-sm">
-                  {docs.map((doc) => (
-                    <li key={doc}>{doc}</li>
-                  ))}
-                </ul>
-              </div>
-
+              {/* Aviso de contato */}
               <div className="rounded-2xl border border-[#ae905e]/60 bg-[#ae905e]/15 p-4 text-sm">
-                <p>Após a solicitação, envie os documentos listados para:</p>
-                <div className="mt-2 font-semibold">
-                  <CopyEmail email={ARVOR_CONTACT_EMAIL} />
-                </div>
-                <p className="mt-2 text-[#2f3c4c]/80">
-                  Nossa equipe retorna em até 24h úteis.
+                <p className="leading-relaxed text-[#2f3c4c]/85">
+                  Após a solicitação, nossa equipe entrará em contato via
+                  WhatsApp em até 24h úteis.
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 {submitStatus !== "loading" && (
                   <Button
                     type="button"
@@ -621,8 +546,7 @@ export function QuoteStepper() {
                 </p>
               )}
             </div>
-          )
-        ) : null}
+          ))}
       </div>
     </section>
   );

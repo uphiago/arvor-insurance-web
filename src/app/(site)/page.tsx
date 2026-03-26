@@ -24,7 +24,7 @@ export default function HomePage() {
             <img
               src="/logo-type.png"
               alt="Arvor Insurance"
-              className="h-[90px] w-auto translate-y-2 object-contain"
+              className="h-[90px] w-auto translate-y-[4px] object-contain"
             />
           </SmoothLink>
           <nav
@@ -70,9 +70,9 @@ export default function HomePage() {
             src="/hero-image-full.png"
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover object-[70%_center] md:object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2f3c4c]/85 via-[#2f3c4c]/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2f3c4c]/90 via-[#2f3c4c]/80 to-[#2f3c4c]/50 md:from-[#2f3c4c]/85 md:via-[#2f3c4c]/60 md:to-transparent" />
 
           <div className="relative mx-auto w-full max-w-6xl px-5 py-20 md:px-8 md:py-36">
             <div className="max-w-xl space-y-6">
@@ -82,11 +82,14 @@ export default function HomePage() {
               <h1 className="animate-hero-item [animation-delay:180ms] text-balance text-4xl font-semibold leading-tight text-[#e5ddc9] md:text-5xl">
                 Cuide da sua Saúde e do Planeta, conheça a Arvor.
               </h1>
-              <p className="animate-hero-item [animation-delay:280ms] text-lg leading-relaxed text-[#e5ddc9]/85">
-                A Arvor Insurance é uma corretora especializada em planos de
-                saúde empresarial e individual, com um diferencial de propósito:
-                parte dos resultados é direcionada a iniciativas
-                socioambientais, reforçando o conceito de Corretora Sustentável.
+              <p className="animate-hero-item [animation-delay:280ms] text-lg leading-relaxed text-[#e5ddc9]/95">
+                A Arvor Insurance é a primeira corretora de seguros sustentável
+                do Brasil, especializada em planos de saúde empresariais,
+                familiares e individuais. Unimos qualidade, transparência e
+                consultoria completa na escolha do melhor plano. Parte do nosso
+                FCF é destinada a ONGs ambientais que combatem o aquecimento
+                global, o desmatamento e apoiam a preservação da Amazônia. Saúde
+                com propósito, responsabilidade e compromisso ESG.
               </p>
               <div className="animate-hero-item [animation-delay:360ms] flex flex-col gap-3 sm:flex-row">
                 <SmoothLink
@@ -109,7 +112,7 @@ export default function HomePage() {
         </section>
 
         {/* Sobre */}
-        <section id="sobre" className="bg-[#2f3c4c]/90 py-16 text-[#e5ddc9]">
+        <section id="sobre" className="bg-[#2f3c4c] py-16 text-[#e5ddc9]">
           <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
             <Reveal className="mb-8">
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-[#8fa286]">
@@ -146,7 +149,7 @@ export default function HomePage() {
                     <h2 className="relative text-balance text-xl font-semibold">
                       {item.title}
                     </h2>
-                    <p className="mt-3 text-sm leading-relaxed text-[#e5ddc9]/85">
+                    <p className="mt-3 text-sm leading-relaxed text-[#e5ddc9]/90">
                       {item.desc}
                     </p>
                   </article>
@@ -168,36 +171,13 @@ export default function HomePage() {
             <h2 className="text-balance text-3xl font-semibold">
               Projeto Sustentável
             </h2>
-            <p className="mt-4 max-w-2xl leading-relaxed text-[#2f3c4c]/80">
+            <p className="mt-4 max-w-2xl leading-relaxed text-[#2f3c4c]/90">
               O propósito socioambiental da Arvor está integrado ao modelo de
               negócio: parte dos resultados é direcionada a iniciativas de
               impacto, reforçando que cada contratação também contribui para um
               mundo melhor.
             </p>
           </Reveal>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {[
-              {
-                name: "SOS Mata Atlântica",
-                desc: "Proteção e restauração da Mata Atlântica, um dos biomas mais ameaçados do planeta.",
-              },
-              {
-                name: "ONG ZOE",
-                desc: "Combate à pobreza extrema e ao tráfico de seres humanos em contextos de vulnerabilidade.",
-              },
-            ].map((org, i) => (
-              <Reveal key={org.name} delay={(i + 1) as 1 | 2}>
-                <div className="rounded-2xl border border-[#8fa286]/35 bg-[#8fa286]/8 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#8fa286]/60 hover:bg-[#8fa286]/12 hover:shadow-md">
-                  <p className="text-sm font-semibold text-[#8fa286]">
-                    {org.name}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-[#2f3c4c]/75">
-                    {org.desc}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </section>
 
         {/* Produtos */}
@@ -219,7 +199,7 @@ export default function HomePage() {
               },
               {
                 title: "Coletivo por Adesão",
-                desc: "Planos acessíveis via associação ou diploma, ideais para profissionais liberais e autônomos.",
+                desc: "Esse modelo é contratado por meio de uma entidade de classe ou associação profissional, com a intermediação de uma administradora de benefícios.",
               },
               {
                 title: "Plano de Saúde Individual",
@@ -235,7 +215,7 @@ export default function HomePage() {
                   <h3 className="text-balance text-xl font-semibold">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-[#2f3c4c]/80">
+                  <p className="mt-3 text-sm leading-relaxed text-[#2f3c4c]/90">
                     {item.desc}
                   </p>
                 </article>
@@ -247,7 +227,7 @@ export default function HomePage() {
         {/* Como funciona */}
         <section
           id="como-funciona"
-          className="bg-[#2f3c4c]/92 py-16 text-[#e5ddc9]"
+          className="bg-[#2f3c4c] py-16 text-[#e5ddc9]"
         >
           <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
             <Reveal className="mb-8">
@@ -284,7 +264,7 @@ export default function HomePage() {
                     <p className="relative text-xl font-semibold">
                       {item.step}
                     </p>
-                    <p className="relative mt-2 text-sm leading-relaxed text-[#e5ddc9]/75">
+                    <p className="relative mt-2 text-sm leading-relaxed text-[#e5ddc9]/90">
                       {item.desc}
                     </p>
                   </div>
@@ -297,7 +277,7 @@ export default function HomePage() {
         <QuoteStepper />
 
         {/* Falar com Especialista */}
-        <section className="bg-[#2f3c4c]/90 py-16 text-[#e5ddc9]">
+        <section className="bg-[#2f3c4c] py-16 text-[#e5ddc9]">
           <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
             <Reveal>
               <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-[#8fa286]">
@@ -306,7 +286,7 @@ export default function HomePage() {
               <h2 className="text-balance text-3xl font-semibold">
                 Fale com um especialista da Arvor.
               </h2>
-              <p className="mt-4 max-w-xl leading-relaxed text-[#e5ddc9]/80">
+              <p className="mt-4 max-w-xl leading-relaxed text-[#e5ddc9]/90">
                 Para quem prefere o atendimento humano e orientação
                 personalizada. Nossa equipe está pronta para apresentar as
                 melhores opções para o seu perfil.
@@ -329,7 +309,7 @@ export default function HomePage() {
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div>
               <p className="font-semibold">Arvor Insurance</p>
-              <p className="mt-1 text-sm text-[#2f3c4c]/60">
+              <p className="mt-1 text-sm text-[#2f3c4c]/75">
                 Corretora Sustentável
               </p>
             </div>
@@ -338,7 +318,7 @@ export default function HomePage() {
               <p className="mt-1">
                 <CopyEmail email={ARVOR_CONTACT_EMAIL} />
               </p>
-              <p className="mt-1 text-[#2f3c4c]/60">
+              <p className="mt-1 text-[#2f3c4c]/75">
                 Atendimento nacional · PF, Coletivo, PJ e MEI
               </p>
             </div>
@@ -350,7 +330,7 @@ export default function HomePage() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Instagram da Arvor Insurance"
-                  className="flex items-center gap-1.5 text-[#2f3c4c]/60 transition-all hover:text-[#2f3c4c] [&>svg]:transition-transform [&>svg]:hover:scale-110"
+                  className="flex items-center gap-1.5 text-[#2f3c4c]/75 transition-all hover:text-[#2f3c4c] [&>svg]:transition-transform [&>svg]:hover:scale-110"
                 >
                   <svg
                     width="18"
@@ -368,7 +348,7 @@ export default function HomePage() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="LinkedIn da Arvor Insurance"
-                  className="flex items-center gap-1.5 text-[#2f3c4c]/60 transition-all hover:text-[#2f3c4c] [&>svg]:transition-transform [&>svg]:hover:scale-110"
+                  className="flex items-center gap-1.5 text-[#2f3c4c]/75 transition-all hover:text-[#2f3c4c] [&>svg]:transition-transform [&>svg]:hover:scale-110"
                 >
                   <svg
                     width="18"
@@ -384,7 +364,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <div className="mt-6 border-t border-[#2f3c4c]/10 pt-4 text-xs text-[#2f3c4c]/50">
+          <div className="mt-6 border-t border-[#2f3c4c]/15 pt-4 text-xs text-[#2f3c4c]/65">
             © {new Date().getFullYear()} Arvor Insurance · CNPJ {ARVOR_CNPJ} ·
             Corretora de Seguros · Todos os direitos reservados.
           </div>
