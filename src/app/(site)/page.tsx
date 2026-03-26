@@ -15,7 +15,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,#f7f2e8_0%,#e5ddc9_42%,#d9d1bc_100%)] text-[#2f3c4c]">
       <header className="sticky top-0 z-20 border-b border-[#ae905e]/35 bg-[#e5ddc9]/55 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 md:px-8">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 overflow-hidden px-5 py-2 md:px-8">
           <SmoothLink
             to="inicio"
             className="flex cursor-pointer items-center"
@@ -24,44 +24,37 @@ export default function HomePage() {
             <img
               src="/logo-type.png"
               alt="Arvor Insurance"
-              className="h-9 w-auto object-contain"
+              className="h-[90px] w-auto object-contain"
             />
           </SmoothLink>
           <nav
             className="hidden items-center gap-5 text-sm md:flex"
             aria-label="Navegação principal"
           >
-            <SmoothLink
-              to="sobre"
-              className="cursor-pointer hover:text-[#8fa286] focus-visible:rounded-sm"
-            >
-              Sobre
-            </SmoothLink>
-            <SmoothLink
-              to="sustentavel"
-              className="cursor-pointer hover:text-[#8fa286] focus-visible:rounded-sm"
-            >
-              Projeto Sustentável
-            </SmoothLink>
-            <SmoothLink
-              to="produtos"
-              className="cursor-pointer hover:text-[#8fa286] focus-visible:rounded-sm"
-            >
-              Produtos
-            </SmoothLink>
-            <SmoothLink
-              to="autoatendimento"
-              className="cursor-pointer hover:text-[#8fa286] focus-visible:rounded-sm"
-            >
-              Cotar
-            </SmoothLink>
+            {(
+              [
+                { to: "sobre", label: "Sobre" },
+                { to: "sustentavel", label: "Projeto Sustentável" },
+                { to: "produtos", label: "Produtos" },
+                { to: "autoatendimento", label: "Cotar" },
+              ] as const
+            ).map((item) => (
+              <SmoothLink
+                key={item.to}
+                to={item.to}
+                className="group relative cursor-pointer focus-visible:rounded-sm"
+              >
+                {item.label}
+                <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[#8fa286] transition-all duration-300 group-hover:w-full" />
+              </SmoothLink>
+            ))}
           </nav>
           <div className="flex items-center gap-2">
             <a
               href={toWhatsappUrl()}
               target="_blank"
               rel="noreferrer"
-              className="hidden cursor-pointer rounded-full border border-[#8fa286]/80 bg-[#8fa286]/80 px-4 py-2 text-sm font-semibold text-[#2f3c4c] shadow-sm transition hover:bg-[#7c8f75] md:inline-flex"
+              className="hidden cursor-pointer rounded-full border border-[#8fa286]/80 bg-[#8fa286]/80 px-4 py-2 text-sm font-semibold text-[#2f3c4c] shadow-sm transition-colors hover:bg-[#7c8f75] md:inline-flex"
             >
               Falar com Especialista
             </a>
@@ -71,17 +64,15 @@ export default function HomePage() {
       </header>
 
       <main id="conteudo-principal">
-        {/* Hero */}
-        <section id="inicio" className="relative overflow-hidden">
-          {/* Background image */}
+        {/* Hero — bg-[#2f3c4c] serves as skeleton while image loads */}
+        <section id="inicio" className="relative overflow-hidden bg-[#2f3c4c]">
           <img
             src="/hero-image-full.png"
             alt=""
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          {/* Overlay gradient for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2f3c4c]/80 via-[#2f3c4c]/55 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2f3c4c]/85 via-[#2f3c4c]/60 to-transparent" />
 
           <div className="relative mx-auto w-full max-w-6xl px-5 py-20 md:px-8 md:py-36">
             <div className="max-w-xl space-y-6">
@@ -100,7 +91,7 @@ export default function HomePage() {
               <div className="animate-hero-item [animation-delay:360ms] flex flex-col gap-3 sm:flex-row">
                 <SmoothLink
                   to="autoatendimento"
-                  className="inline-flex items-center justify-center rounded-full bg-[#e5ddc9] px-6 py-3 text-center font-semibold text-[#2f3c4c] transition hover:bg-[#d9d1bc]"
+                  className="inline-flex items-center justify-center rounded-full bg-[#e5ddc9] px-6 py-3 text-center font-semibold text-[#2f3c4c] transition-colors hover:bg-[#d9d1bc]"
                 >
                   Cotar agora
                 </SmoothLink>
@@ -108,7 +99,7 @@ export default function HomePage() {
                   href={toWhatsappUrl()}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-[#e5ddc9]/70 px-6 py-3 text-center font-semibold text-[#e5ddc9] transition hover:bg-[#e5ddc9]/15"
+                  className="inline-flex items-center justify-center rounded-full border border-[#e5ddc9]/70 px-6 py-3 text-center font-semibold text-[#e5ddc9] transition-colors hover:bg-[#e5ddc9]/15"
                 >
                   Falar com especialista
                 </a>
@@ -148,7 +139,7 @@ export default function HomePage() {
                   delay={(i + 1) as 1 | 2 | 3}
                   className="h-full"
                 >
-                  <article className="relative h-full overflow-hidden rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#e5ddc9]/15 hover:shadow-lg">
+                  <article className="relative h-full overflow-hidden rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:bg-[#e5ddc9]/15 hover:shadow-lg">
                     <span className="pointer-events-none absolute right-4 bottom-2 select-none text-7xl font-bold leading-none text-[#e5ddc9]/[0.07]">
                       {item.num}
                     </span>
@@ -196,7 +187,7 @@ export default function HomePage() {
               },
             ].map((org, i) => (
               <Reveal key={org.name} delay={(i + 1) as 1 | 2}>
-                <div className="rounded-2xl border border-[#8fa286]/35 bg-[#8fa286]/8 p-5">
+                <div className="rounded-2xl border border-[#8fa286]/35 bg-[#8fa286]/8 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#8fa286]/60 hover:bg-[#8fa286]/12 hover:shadow-md">
                   <p className="text-sm font-semibold text-[#8fa286]">
                     {org.name}
                   </p>
@@ -240,7 +231,7 @@ export default function HomePage() {
                 delay={(i + 1) as 1 | 2 | 3}
                 className="h-full"
               >
-                <article className="h-full rounded-2xl border border-[#ae905e]/65 bg-[#f9f5ea]/55 p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-[#ae905e] hover:shadow-xl">
+                <article className="h-full rounded-2xl border border-[#ae905e]/65 bg-[#f9f5ea]/55 p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:border-[#ae905e] hover:shadow-xl">
                   <h3 className="text-balance text-xl font-semibold">
                     {item.title}
                   </h3>
@@ -286,7 +277,7 @@ export default function HomePage() {
                 },
               ].map((item, i) => (
                 <Reveal key={item.step} delay={(i + 1) as 1 | 2 | 3}>
-                  <div className="relative overflow-hidden rounded-2xl border border-[#8fa286]/45 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#e5ddc9]/15">
+                  <div className="relative overflow-hidden rounded-2xl border border-[#8fa286]/45 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:bg-[#e5ddc9]/15">
                     <span className="pointer-events-none absolute right-3 bottom-2 select-none text-7xl font-bold leading-none text-[#e5ddc9]/[0.08] tabular-nums">
                       {item.num}
                     </span>
@@ -317,14 +308,14 @@ export default function HomePage() {
               </h2>
               <p className="mt-4 max-w-xl leading-relaxed text-[#e5ddc9]/80">
                 Para quem prefere o atendimento humano e orientação
-                personalizada — nossa equipe está pronta para apresentar as
+                personalizada. Nossa equipe está pronta para apresentar as
                 melhores opções para o seu perfil.
               </p>
               <a
                 href={toWhatsappUrl()}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 inline-flex items-center justify-center rounded-full bg-[#8fa286] px-8 py-3 font-semibold text-[#2f3c4c] transition hover:bg-[#7c8f75]"
+                className="mt-6 inline-flex items-center justify-center rounded-full bg-[#8fa286] px-8 py-3 font-semibold text-[#2f3c4c] transition-colors hover:bg-[#7c8f75]"
               >
                 Falar com especialista via WhatsApp
               </a>
@@ -359,9 +350,8 @@ export default function HomePage() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Instagram da Arvor Insurance"
-                  className="flex items-center gap-1.5 text-[#2f3c4c]/60 transition hover:text-[#2f3c4c]"
+                  className="flex items-center gap-1.5 text-[#2f3c4c]/60 transition-all hover:text-[#2f3c4c] [&>svg]:transition-transform [&>svg]:hover:scale-110"
                 >
-                  {/* Instagram logo */}
                   <svg
                     width="18"
                     height="18"
@@ -378,9 +368,8 @@ export default function HomePage() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="LinkedIn da Arvor Insurance"
-                  className="flex items-center gap-1.5 text-[#2f3c4c]/60 transition hover:text-[#2f3c4c]"
+                  className="flex items-center gap-1.5 text-[#2f3c4c]/60 transition-all hover:text-[#2f3c4c] [&>svg]:transition-transform [&>svg]:hover:scale-110"
                 >
-                  {/* LinkedIn logo */}
                   <svg
                     width="18"
                     height="18"
