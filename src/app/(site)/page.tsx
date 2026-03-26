@@ -76,9 +76,17 @@ export default function HomePage() {
 
           <div className="relative mx-auto w-full max-w-6xl px-5 py-20 md:px-8 md:py-36">
             <div className="max-w-xl space-y-6">
-              <p className="animate-hero-item [animation-delay:80ms] inline-block rounded-full border border-[#ae905e] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#ae905e]">
-                Primeira Corretora Sustentável do Brasil
-              </p>
+              <div className="animate-hero-item [animation-delay:80ms] inline-flex items-center gap-2 rounded-full border border-[#ae905e] px-3 py-1">
+                <img
+                  src="/eco.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="h-4 w-4 object-contain"
+                />
+                <span className="text-xs font-semibold uppercase tracking-wider text-[#ae905e]">
+                  Primeira Corretora Sustentável do Brasil
+                </span>
+              </div>
               <h1 className="animate-hero-item [animation-delay:180ms] text-balance text-4xl font-semibold leading-tight text-[#e5ddc9] md:text-5xl">
                 Cuide da sua Saúde e do Planeta, conheça a Arvor.
               </h1>
