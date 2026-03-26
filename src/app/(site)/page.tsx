@@ -14,8 +14,8 @@ import { MobileNav } from "@/components/site/mobile-nav";
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,#f7f2e8_0%,#e5ddc9_42%,#d9d1bc_100%)] text-[#2f3c4c]">
-      <header className="sticky top-0 z-20 border-b border-[#ae905e]/35 bg-[#e5ddc9]/55 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 overflow-hidden px-5 py-2 md:px-8">
+      <header className="sticky top-0 z-20 h-16 overflow-hidden border-b border-[#ae905e]/35 bg-[#e5ddc9]/55 backdrop-blur-xl">
+        <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-between gap-4 px-5 md:px-8">
           <SmoothLink
             to="inicio"
             className="flex cursor-pointer items-center"
@@ -24,7 +24,7 @@ export default function HomePage() {
             <img
               src="/logo-type.png"
               alt="Arvor Insurance"
-              className="h-[90px] w-auto object-contain"
+              className="h-[120px] w-auto object-contain"
             />
           </SmoothLink>
           <nav
