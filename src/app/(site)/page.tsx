@@ -18,19 +18,13 @@ export default function HomePage() {
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 md:px-8">
           <SmoothLink
             to="inicio"
-            className="flex cursor-pointer items-center gap-2"
+            className="flex cursor-pointer items-center"
             aria-label="Arvor Insurance — página inicial"
           >
             <img
-              src="/logo-symbol.png"
-              alt=""
-              aria-hidden="true"
-              className="h-8 w-auto"
-            />
-            <img
               src="/logo-type.png"
               alt="Arvor Insurance"
-              className="h-[64px] w-auto"
+              className="h-9 w-auto object-contain"
             />
           </SmoothLink>
           <nav
