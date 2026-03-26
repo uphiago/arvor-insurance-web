@@ -103,18 +103,12 @@ export default function HomePage() {
                   </a>
                 </div>
               </div>
-              <div className="animate-hero-item [animation-delay:320ms] rounded-3xl border border-[#ae905e]/65 bg-[#2f3c4c]/88 p-8 text-[#e5ddc9] shadow-xl backdrop-blur-xl">
-                <p className="text-sm uppercase tracking-wider text-[#8fa286]">
-                  Diferencial Arvor
-                </p>
-                <h2 className="mt-3 text-balance text-2xl font-semibold">
-                  Proteção com impacto positivo
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-[#e5ddc9]/90">
-                  Parte do FCF da corretora é destinada a iniciativas
-                  socioambientais, reforçando crescimento, proteção e
-                  longevidade.
-                </p>
+              <div className="animate-hero-item [animation-delay:320ms] overflow-hidden rounded-3xl border border-[#ae905e]/65 shadow-xl">
+                <img
+                  src="/hero-image.png"
+                  alt="Proteção com impacto positivo — Arvor Insurance"
+                  className="h-full w-full object-cover"
+                />
               </div>
             </div>
           </div>
