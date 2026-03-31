@@ -41,22 +41,22 @@ const STEP_ONE_SCHEMA = z.object({
   fullName: z
     .string()
     .min(1, "Informe seu nome completo.")
-    .refine((value) => value.trim().split(/\s+/).length >= 2, {
+    .refine((v) => v.trim().split(/\s+/).length >= 2, {
       message: "Informe nome e sobrenome.",
     }),
   phone: z
     .string()
     .min(1, "Informe seu telefone.")
-    .refine((value) => value.replace(/\D/g, "").length >= 10, {
+    .refine((v) => v.replace(/\D/g, "").length >= 10, {
       message: "Telefone precisa ter 10 ou 11 dígitos.",
     })
-    .refine((value) => value.replace(/\D/g, "").length <= 11, {
+    .refine((v) => v.replace(/\D/g, "").length <= 11, {
       message: "Telefone precisa ter 10 ou 11 dígitos.",
     }),
   email: z.string().email("Informe um e-mail válido."),
   acceptedTerms: z
     .boolean()
-    .refine((value) => value, "Você precisa aceitar os termos para avançar."),
+    .refine((v) => v, "Você precisa aceitar os termos para avançar."),
 });
 
 const STEP_TWO_SCHEMA = z.object({
@@ -120,6 +120,19 @@ export function QuoteStepper() {
     name: "phone",
   });
 
+  function resetAll() {
+    setStep(1);
+    setStepOneData(null);
+    setStepTwoData(null);
+    setSubmitStatus("idle");
+    setSubmitMessage("");
+    setPersonCount(1);
+    setAges([""]);
+    setAgeError("");
+    stepOneForm.reset();
+    stepTwoForm.reset();
+  }
+
   function changePersonCount(delta: number) {
     const next = Math.max(1, personCount + delta);
     setPersonCount(next);
@@ -148,6 +161,14 @@ export function QuoteStepper() {
       setAgeError("Informe a idade de todas as pessoas.");
       return;
     }
+    const invalidAge = ages.some((a) => {
+      const n = Number(a);
+      return isNaN(n) || n < 0 || n > 110;
+    });
+    if (invalidAge) {
+      setAgeError("Idades devem estar entre 0 e 110 anos.");
+      return;
+    }
     setStepTwoData({
       modality: values.modality as Modality,
       personCount,
@@ -162,11 +183,9 @@ export function QuoteStepper() {
       setSubmitMessage("Dados incompletos. Volte e preencha todos os campos.");
       return;
     }
-
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
     setSubmitStatus("loading");
-
     try {
       const response = await fetch("/api/quote", {
         method: "POST",
@@ -181,12 +200,10 @@ export function QuoteStepper() {
         }),
         signal: controller.signal,
       });
-
       if (response.ok) {
         setSubmitStatus("success");
         return;
       }
-
       setSubmitStatus("error");
       setSubmitMessage(
         "Não foi possível enviar automaticamente. Tente novamente em instantes.",
@@ -203,6 +220,8 @@ export function QuoteStepper() {
       clearTimeout(timeout);
     }
   }
+
+  const s1Errors = stepOneForm.formState.errors;
 
   return (
     <section
@@ -258,7 +277,7 @@ export function QuoteStepper() {
       </div>
 
       {/* Card */}
-      <div className="mt-6 min-h-[480px] rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
+      <div className="mt-6 min-h-[480px] rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/90 p-5 shadow-lg backdrop-blur-sm md:p-8">
         {/* ── Step 1 ── */}
         {step === 1 && (
           <form
@@ -273,10 +292,16 @@ export function QuoteStepper() {
                 type="text"
                 autoComplete="name"
                 className="mt-1"
+                aria-invalid={!!s1Errors.fullName}
+                aria-describedby="fullName-error"
                 {...stepOneForm.register("fullName")}
               />
-              <p className="mt-1 min-h-4 text-xs text-[#c5874a]">
-                {stepOneForm.formState.errors.fullName?.message ?? ""}
+              <p
+                id="fullName-error"
+                role="alert"
+                className="mt-1 min-h-4 text-xs text-[#c5874a]"
+              >
+                {s1Errors.fullName?.message ?? ""}
               </p>
             </div>
 
@@ -288,6 +313,8 @@ export function QuoteStepper() {
                 type="tel"
                 autoComplete="tel"
                 className="mt-1"
+                aria-invalid={!!s1Errors.phone}
+                aria-describedby="phone-error"
                 value={watchedPhone ?? ""}
                 onChange={(e) =>
                   stepOneForm.setValue("phone", formatPhone(e.target.value), {
@@ -295,8 +322,12 @@ export function QuoteStepper() {
                   })
                 }
               />
-              <p className="mt-1 min-h-4 text-xs text-[#c5874a]">
-                {stepOneForm.formState.errors.phone?.message ?? ""}
+              <p
+                id="phone-error"
+                role="alert"
+                className="mt-1 min-h-4 text-xs text-[#c5874a]"
+              >
+                {s1Errors.phone?.message ?? ""}
               </p>
             </div>
 
@@ -308,10 +339,16 @@ export function QuoteStepper() {
                 autoComplete="email"
                 spellCheck={false}
                 className="mt-1"
+                aria-invalid={!!s1Errors.email}
+                aria-describedby="email-error"
                 {...stepOneForm.register("email")}
               />
-              <p className="mt-1 min-h-4 text-xs text-[#c5874a]">
-                {stepOneForm.formState.errors.email?.message ?? ""}
+              <p
+                id="email-error"
+                role="alert"
+                className="mt-1 min-h-4 text-xs text-[#c5874a]"
+              >
+                {s1Errors.email?.message ?? ""}
               </p>
             </div>
 
@@ -319,6 +356,7 @@ export function QuoteStepper() {
               <input
                 type="checkbox"
                 className="mt-1 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ae905e]"
+                aria-describedby="terms-error"
                 {...stepOneForm.register("acceptedTerms")}
               />
               <span>
@@ -326,8 +364,12 @@ export function QuoteStepper() {
                 Dados da Arvor Insurance.
               </span>
             </label>
-            <p className="min-h-4 text-xs text-[#c5874a]">
-              {stepOneForm.formState.errors.acceptedTerms?.message ?? ""}
+            <p
+              id="terms-error"
+              role="alert"
+              className="min-h-4 text-xs text-[#c5874a]"
+            >
+              {s1Errors.acceptedTerms?.message ?? ""}
             </p>
 
             <Button type="submit" variant="primary">
@@ -354,19 +396,23 @@ export function QuoteStepper() {
               <div className="mt-3 flex items-center gap-4">
                 <button
                   type="button"
-                  aria-label="Diminuir"
+                  aria-label="Diminuir número de pessoas"
                   onClick={() => changePersonCount(-1)}
                   disabled={personCount <= 1}
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#2f3c4c]/25 bg-[#fffdf8] text-lg font-semibold transition-colors hover:bg-[#2f3c4c]/8 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   −
                 </button>
-                <span className="w-8 text-center text-xl font-semibold tabular-nums">
+                <span
+                  aria-live="polite"
+                  aria-atomic="true"
+                  className="w-8 text-center text-xl font-semibold tabular-nums"
+                >
                   {personCount}
                 </span>
                 <button
                   type="button"
-                  aria-label="Aumentar"
+                  aria-label="Aumentar número de pessoas"
                   onClick={() => changePersonCount(1)}
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#2f3c4c]/25 bg-[#fffdf8] text-lg font-semibold transition-colors hover:bg-[#2f3c4c]/8"
                 >
@@ -395,6 +441,10 @@ export function QuoteStepper() {
                       value={age}
                       onChange={(e) => updateAge(i, e.target.value)}
                       aria-label={`Idade da pessoa ${i + 1}`}
+                      aria-invalid={
+                        ageError !== "" &&
+                        (age.trim() === "" || Number(age) > 110)
+                      }
                     />
                     <span className="shrink-0 text-sm text-[#2f3c4c]/75">
                       anos
@@ -402,7 +452,13 @@ export function QuoteStepper() {
                   </div>
                 ))}
               </div>
-              <p className="mt-1 min-h-4 text-xs text-[#c5874a]">{ageError}</p>
+              <p
+                id="age-error"
+                role="alert"
+                className="mt-1 min-h-4 text-xs text-[#c5874a]"
+              >
+                {ageError}
+              </p>
             </div>
 
             {/* Modalidade */}
@@ -432,7 +488,7 @@ export function QuoteStepper() {
                   </label>
                 ))}
               </div>
-              <p className="mt-1 min-h-4 text-xs text-[#c5874a]">
+              <p role="alert" className="mt-1 min-h-4 text-xs text-[#c5874a]">
                 {stepTwoForm.formState.errors.modality?.message ?? ""}
               </p>
             </fieldset>
@@ -479,6 +535,13 @@ export function QuoteStepper() {
               >
                 Falar com especialista
               </a>
+              <button
+                type="button"
+                onClick={resetAll}
+                className="text-sm text-[#2f3c4c]/60 underline underline-offset-2 transition-colors hover:text-[#2f3c4c]"
+              >
+                Fazer nova cotação
+              </button>
             </div>
           ) : (
             <div key="step-3" className="animate-step-in space-y-5">
@@ -537,7 +600,7 @@ export function QuoteStepper() {
 
               {submitStatus === "error" && (
                 <p
-                  role="status"
+                  role="alert"
                   aria-live="polite"
                   className="text-sm text-[#c5874a]"
                 >

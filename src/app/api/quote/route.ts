@@ -9,14 +9,20 @@ const quoteRequestSchema = z.object({
   ages: z.array(z.string()).min(1),
 });
 
-const ALLOWED_ORIGINS = [
-  "https://www.arvorin.com.br",
-  "https://arvorin.com.br",
-];
+function isAllowedOrigin(origin: string) {
+  if (
+    origin === "https://www.arvorin.com.br" ||
+    origin === "https://arvorin.com.br"
+  )
+    return true;
+  if (/^https:\/\/arvor-insurance-web[^.]*\.vercel\.app$/.test(origin))
+    return true;
+  return false;
+}
 
 export async function POST(request: Request) {
   const origin = request.headers.get("origin");
-  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+  if (origin && !isAllowedOrigin(origin)) {
     return Response.json({ error: "Origem não permitida." }, { status: 403 });
   }
 
@@ -35,11 +41,14 @@ export async function POST(request: Request) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        createdAt: (() => {
-          const now = new Date(Date.now() - 3 * 60 * 60 * 1000); // BRT = UTC-3
-          const p = (n: number) => String(n).padStart(2, "0");
-          return `${p(now.getUTCDate())}/${p(now.getUTCMonth() + 1)}/${now.getUTCFullYear()} ${p(now.getUTCHours())}:${p(now.getUTCMinutes())}`;
-        })(),
+        createdAt: new Intl.DateTimeFormat("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(new Date()),
         source: "arvor-site",
         ...payload,
       }),

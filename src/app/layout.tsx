@@ -37,6 +37,26 @@ export const metadata: Metadata = {
     title: "Arvor Insurance",
     description: DESCRIPTION,
   },
+  keywords: [
+    "plano de saúde empresarial",
+    "plano de saúde individual",
+    "coletivo por adesão",
+    "corretora de seguros sustentável",
+    "seguro saúde Brasil",
+    "Arvor Insurance",
+    "MEI plano de saúde",
+    "benefícios empresariais",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

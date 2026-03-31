@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Reveal } from "@/components/ui/reveal";
 import { QuoteStepper } from "@/components/site/quote-stepper";
 import {
@@ -20,9 +21,12 @@ export default function HomePage() {
             className="flex cursor-pointer items-center"
             aria-label="Arvor Insurance — página inicial"
           >
-            <img
+            <Image
               src="/logo-type.png"
               alt="Arvor Insurance"
+              width={300}
+              height={90}
+              priority
               className="h-[90px] w-auto translate-y-[4px] object-contain"
             />
           </SmoothLink>
@@ -62,11 +66,13 @@ export default function HomePage() {
       <main id="conteudo-principal">
         {/* Hero — bg-[#2f3c4c] serves as skeleton while image loads */}
         <section id="inicio" className="relative overflow-hidden bg-[#2f3c4c]">
-          <img
+          <Image
             src="/hero-image-full.png"
             alt=""
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover object-[70%_center] md:object-center"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[70%_center] md:object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#2f3c4c]/90 via-[#2f3c4c]/80 to-[#2f3c4c]/50 md:from-[#2f3c4c]/85 md:via-[#2f3c4c]/60 md:to-transparent" />
 
@@ -146,7 +152,7 @@ export default function HomePage() {
                   delay={(i + 1) as 1 | 2 | 3}
                   className="h-full"
                 >
-                  <article className="relative h-full overflow-hidden rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:bg-[#e5ddc9]/15 hover:shadow-lg">
+                  <article className="relative h-full overflow-hidden rounded-2xl border border-[#8fa286]/35 bg-[#e5ddc9]/10 p-6 backdrop-blur-none transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:bg-[#e5ddc9]/15 hover:shadow-lg">
                     <span className="pointer-events-none absolute right-4 bottom-2 select-none text-7xl font-bold leading-none text-[#e5ddc9]/[0.07]">
                       {item.num}
                     </span>
@@ -215,7 +221,7 @@ export default function HomePage() {
                 delay={(i + 1) as 1 | 2 | 3}
                 className="h-full"
               >
-                <article className="h-full rounded-2xl border border-[#ae905e]/65 bg-[#f9f5ea]/55 p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:border-[#ae905e] hover:shadow-xl">
+                <article className="h-full rounded-2xl border border-[#ae905e]/65 bg-[#f9f5ea]/55 p-6 shadow-lg backdrop-blur-none transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:border-[#ae905e] hover:shadow-xl">
                   <h3 className="text-balance text-xl font-semibold">
                     {item.title}
                   </h3>
@@ -261,7 +267,7 @@ export default function HomePage() {
                 },
               ].map((item, i) => (
                 <Reveal key={item.step} delay={(i + 1) as 1 | 2 | 3}>
-                  <div className="relative overflow-hidden rounded-2xl border border-[#8fa286]/45 bg-[#e5ddc9]/10 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:bg-[#e5ddc9]/15">
+                  <div className="relative overflow-hidden rounded-2xl border border-[#8fa286]/45 bg-[#e5ddc9]/10 p-6 backdrop-blur-none transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:bg-[#e5ddc9]/15">
                     <span className="pointer-events-none absolute right-3 bottom-2 select-none text-7xl font-bold leading-none text-[#e5ddc9]/[0.08] tabular-nums">
                       {item.num}
                     </span>
