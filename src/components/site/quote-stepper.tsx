@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+import Link from "next/link";
 import { toWhatsappUrl } from "@/lib/arvor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -360,8 +361,23 @@ export function QuoteStepper() {
                 {...stepOneForm.register("acceptedTerms")}
               />
               <span>
-                Declaro que li e concordo com os Termos de Uso e a Política de
-                Dados da Arvor Insurance.
+                Declaro que li e concordo com os{" "}
+                <Link
+                  href="/termos"
+                  target="_blank"
+                  className="underline underline-offset-2 hover:text-[#2f3c4c]"
+                >
+                  Termos de Uso
+                </Link>{" "}
+                e a{" "}
+                <Link
+                  href="/privacidade"
+                  target="_blank"
+                  className="underline underline-offset-2 hover:text-[#2f3c4c]"
+                >
+                  Política de Privacidade
+                </Link>{" "}
+                da Arvor Insurance.
               </span>
             </label>
             <p
