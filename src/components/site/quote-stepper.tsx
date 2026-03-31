@@ -258,7 +258,7 @@ export function QuoteStepper() {
       </div>
 
       {/* Card */}
-      <div className="mt-6 rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
+      <div className="mt-6 min-h-[480px] rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/70 p-5 shadow-lg backdrop-blur-xl md:p-8">
         {/* ── Step 1 ── */}
         {step === 1 && (
           <form
@@ -459,7 +459,7 @@ export function QuoteStepper() {
           (submitStatus === "success" ? (
             <div
               key="step-3-success"
-              className="animate-step-in flex flex-col items-center justify-center gap-5 py-12 text-center"
+              className="animate-step-in flex min-h-[420px] flex-col items-center justify-center gap-5 text-center"
             >
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#8fa286] text-3xl text-white">
                 ✓
@@ -514,15 +514,14 @@ export function QuoteStepper() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                {submitStatus !== "loading" && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setStep(2)}
-                  >
-                    Voltar
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setStep(2)}
+                  disabled={submitStatus === "loading"}
+                >
+                  Voltar
+                </Button>
                 <Button
                   type="button"
                   onClick={handleQuoteRequest}
