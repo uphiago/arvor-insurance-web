@@ -4,9 +4,9 @@ const quoteRequestSchema = z.object({
   name: z.string().min(3),
   phone: z.string().min(10),
   email: z.string().email(),
-  state: z.string().min(2),
-  region: z.string().min(2),
   modality: z.string().min(2),
+  personCount: z.number().int().min(1),
+  ages: z.array(z.string()).min(1),
 });
 
 const ALLOWED_ORIGINS = [
