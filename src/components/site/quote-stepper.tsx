@@ -234,7 +234,8 @@ export function QuoteStepper() {
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-[#2f3c4c]/90">
         Preencha os dados em 3 etapas. Ao concluir, registramos sua solicitação
-        e a equipe entra em contato. Entraremos em contato em até 24h.
+        e a equipe entra em contato. Entraremos em contato o mais breve
+        possível.
       </p>
 
       {/* Step indicators */}
@@ -478,9 +479,13 @@ export function QuoteStepper() {
             </div>
 
             {/* Modalidade */}
-            <fieldset>
-              <legend className="text-sm font-semibold">Modalidade</legend>
-              <div className="mt-2 grid gap-3 md:grid-cols-2">
+            <div>
+              <Label id="modality-label">Modalidade</Label>
+              <div
+                role="radiogroup"
+                aria-labelledby="modality-label"
+                className="mt-2 grid gap-3 md:grid-cols-2"
+              >
                 {MODALITIES.map((item) => (
                   <label
                     key={item.value}
@@ -507,7 +512,7 @@ export function QuoteStepper() {
               <p role="alert" className="mt-1 min-h-4 text-xs text-[#c5874a]">
                 {stepTwoForm.formState.errors.modality?.message ?? ""}
               </p>
-            </fieldset>
+            </div>
 
             <div className="flex flex-wrap items-center gap-3">
               <Button
@@ -539,8 +544,8 @@ export function QuoteStepper() {
               <div>
                 <h3 className="text-xl font-semibold">Solicitação enviada!</h3>
                 <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#2f3c4c]/75">
-                  Nossa equipe retornará em até 24h úteis com as melhores opções
-                  para o seu perfil.
+                  Nossa equipe retornará o mais breve possível com as melhores
+                  opções para o seu perfil.
                 </p>
               </div>
               <a
@@ -588,7 +593,7 @@ export function QuoteStepper() {
               <div className="rounded-2xl border border-[#ae905e]/60 bg-[#ae905e]/15 p-4 text-sm">
                 <p className="leading-relaxed text-[#2f3c4c]/85">
                   Após a solicitação, nossa equipe entrará em contato via
-                  WhatsApp em até 24h úteis.
+                  WhatsApp o mais breve possível.
                 </p>
               </div>
 
