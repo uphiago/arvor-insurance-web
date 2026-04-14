@@ -6,7 +6,7 @@ export const ARVOR_WHATSAPP_PHONE =
 
 export const ARVOR_INSTAGRAM =
   process.env.NEXT_PUBLIC_INSTAGRAM_URL ??
-  "https://www.instagram.com/arvorinsurance";
+  "https://www.instagram.com/arvorinsurance_";
 
 export const ARVOR_LINKEDIN =
   process.env.NEXT_PUBLIC_LINKEDIN_URL ??
