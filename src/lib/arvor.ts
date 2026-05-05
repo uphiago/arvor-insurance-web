@@ -2,7 +2,7 @@ export const ARVOR_CONTACT_EMAIL =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "dimitricontro@arvorin.com.br";
 
 export const ARVOR_WHATSAPP_PHONE =
-  process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? "55XXXXXXXXXXX";
+  process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? "5511914892878";
 
 export const ARVOR_INSTAGRAM =
   process.env.NEXT_PUBLIC_INSTAGRAM_URL ??
