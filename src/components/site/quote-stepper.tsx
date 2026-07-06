@@ -5,38 +5,90 @@ import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
-import { toWhatsappUrl } from "@/lib/arvor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const STEP_LABELS = ["Sobre você", "Sobre o plano", "Solicitar Cotação"];
+const STEP_LABELS = ["Sobre você", "Perfil do plano", "Situação atual"];
+
+/* ── Perfis por número de vidas ─────────────────────────────── */
+
+const LIVES_RANGES = [
+  {
+    value: "2-5",
+    title: "2 a 5 pessoas",
+    description: "Família ou pequena equipe.",
+    min: 2,
+    max: 5,
+    detailed: true,
+  },
+  {
+    value: "6-10",
+    title: "6 a 10 pessoas",
+    description: "Pequena empresa em crescimento.",
+    min: 6,
+    max: 10,
+    detailed: true,
+  },
+  {
+    value: "11-50",
+    title: "11 a 50 vidas",
+    description: "Empresa de pequeno a médio porte.",
+    min: 11,
+    max: 50,
+    detailed: false,
+  },
+  {
+    value: "51-100",
+    title: "51 a 100 vidas",
+    description: "Empresa de médio porte.",
+    min: 51,
+    max: 100,
+    detailed: false,
+  },
+  {
+    value: "100+",
+    title: "Mais de 100 vidas",
+    description: "Grandes contratos corporativos.",
+    min: 101,
+    max: 10000,
+    detailed: false,
+  },
+] as const;
+type LivesRange = (typeof LIVES_RANGES)[number]["value"];
 
 const MODALITIES = [
   {
-    value: "pf",
-    title: "Pessoa Física",
-    description: "Ideal para você e sua família. (Mínimo 1 pessoa)",
-  },
-  {
-    value: "adesao",
-    title: "Coletivo por Adesão",
-    description:
-      "Contratado por meio de uma entidade de classe ou associação profissional, com intermediação de uma administradora de benefícios.",
-  },
-  {
     value: "pj",
     title: "Pessoa Jurídica (PJ)",
-    description: "Ideal para sua empresa com CNPJ ativo. (Mínimo 1 pessoa)",
+    description: "Para empresas com CNPJ ativo.",
   },
   {
     value: "mei",
     title: "MEI",
-    description:
-      "Para Microempreendedores Individuais com CNPJ ativo há mais de 6 meses. (Mínimo 1 pessoa)",
+    description: "CNPJ de Microempreendedor ativo há 6+ meses.",
   },
 ] as const;
 type Modality = (typeof MODALITIES)[number]["value"];
+
+const BUDGET_OPTIONS = [
+  "Até R$ 5 mil/mês",
+  "R$ 5 mil a R$ 15 mil/mês",
+  "R$ 15 mil a R$ 50 mil/mês",
+  "Acima de R$ 50 mil/mês",
+  "Ainda não sei / primeiro plano",
+] as const;
+
+const MIGRATION_REASONS = [
+  "Reajuste / preço alto",
+  "Rede de atendimento",
+  "Qualidade do atendimento",
+  "Benefício para colaboradores",
+  "Revisão geral do contrato",
+  "Outro",
+] as const;
+
+/* ── Schemas ────────────────────────────────────────────────── */
 
 const STEP_ONE_SCHEMA = z.object({
   fullName: z
@@ -59,18 +111,27 @@ const STEP_ONE_SCHEMA = z.object({
     .boolean()
     .refine((v) => v, "Você precisa aceitar os termos para avançar."),
 });
-
-const STEP_TWO_SCHEMA = z.object({
-  modality: z.string().min(1, "Selecione uma modalidade."),
-});
-
 type StepOneData = z.infer<typeof STEP_ONE_SCHEMA>;
-type StepTwoData = z.infer<typeof STEP_TWO_SCHEMA>;
+
 type StepTwoValidatedData = {
-  modality: Modality;
-  personCount: number;
-  ages: string[];
+  livesRange: LivesRange;
+  companyName?: string;
+  modality?: Modality;
+  personCount?: number;
+  ages?: string[];
+  cnpj?: string;
+  livesApprox?: string;
+  monthlyBudget?: string;
 };
+
+type StepThreeValidatedData = {
+  hasActivePlan: boolean;
+  currentOperator?: string;
+  currentSpend?: string;
+  migrationReason?: string;
+};
+
+/* ── Helpers ────────────────────────────────────────────────── */
 
 function formatPhone(raw: string) {
   const digits = raw.replace(/\D/g, "").slice(0, 11);
@@ -81,9 +142,39 @@ function formatPhone(raw: string) {
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 }
 
-function modalityLabel(modality: Modality) {
-  return MODALITIES.find((item) => item.value === modality)?.title ?? modality;
+function formatCnpj(raw: string) {
+  const d = raw.replace(/\D/g, "").slice(0, 14);
+  if (d.length <= 2) return d;
+  if (d.length <= 5) return `${d.slice(0, 2)}.${d.slice(2)}`;
+  if (d.length <= 8) return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5)}`;
+  if (d.length <= 12)
+    return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8)}`;
+  return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8, 12)}-${d.slice(12)}`;
 }
+
+function rangeConfig(value: LivesRange | "") {
+  return LIVES_RANGES.find((r) => r.value === value);
+}
+
+function modalityLabel(modality?: Modality) {
+  if (!modality) return "";
+  return MODALITIES.find((m) => m.value === modality)?.title ?? modality;
+}
+
+const cardClass = (selected: boolean) =>
+  [
+    "flex cursor-pointer flex-col rounded-2xl border p-3 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#ae905e] has-[:focus-visible]:ring-offset-1 md:p-4",
+    selected
+      ? "border-[#8fa286] bg-[#8fa286]/15"
+      : "border-[#2f3c4c]/20 bg-[#fffdf8]",
+  ].join(" ");
+
+const selectClass =
+  "mt-1 h-10 w-full rounded-xl border border-[#2f3c4c]/25 bg-[#fffdf8] px-3 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#ae905e]";
+
+const errorClass = "mt-1 min-h-4 text-xs text-[#c5874a]";
+
+/* ── Componente ─────────────────────────────────────────────── */
 
 export function QuoteStepper() {
   const [step, setStep] = useState(1);
@@ -96,30 +187,38 @@ export function QuoteStepper() {
   >("idle");
   const [submitMessage, setSubmitMessage] = useState("");
 
+  /* Step 2 state */
+  const [livesRange, setLivesRange] = useState<LivesRange | "">("");
+  const [modality, setModality] = useState<Modality | "">("");
   const [personCount, setPersonCount] = useState(1);
   const [ages, setAges] = useState<string[]>([""]);
-  const [ageError, setAgeError] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [cnpj, setCnpj] = useState("");
+  const [livesApprox, setLivesApprox] = useState("");
+  const [monthlyBudget, setMonthlyBudget] = useState("");
+  const [stepTwoError, setStepTwoError] = useState("");
+
+  /* Step 3 state */
+  const [hasActivePlan, setHasActivePlan] = useState<"" | "yes" | "no">("");
+  const [currentOperator, setCurrentOperator] = useState("");
+  const [currentSpend, setCurrentSpend] = useState("");
+  const [migrationReason, setMigrationReason] = useState("");
+  const [stepThreeError, setStepThreeError] = useState("");
 
   const stepOneForm = useForm<StepOneData>({
     resolver: zodResolver(STEP_ONE_SCHEMA),
     mode: "onChange",
     defaultValues: { fullName: "", phone: "", email: "", acceptedTerms: false },
   });
-
-  const stepTwoForm = useForm<StepTwoData>({
-    resolver: zodResolver(STEP_TWO_SCHEMA),
-    mode: "onChange",
-    defaultValues: { modality: "" },
-  });
-
-  const watchedModality = useWatch({
-    control: stepTwoForm.control,
-    name: "modality",
-  });
   const watchedPhone = useWatch({
     control: stepOneForm.control,
     name: "phone",
   });
+  const s1Errors = stepOneForm.formState.errors;
+
+  const range = rangeConfig(livesRange);
+  const isDetailed = !!range?.detailed;
+  const needsCnpjSmall = true;
 
   function resetAll() {
     setStep(1);
@@ -127,28 +226,55 @@ export function QuoteStepper() {
     setStepTwoData(null);
     setSubmitStatus("idle");
     setSubmitMessage("");
+    setLivesRange("");
+    setModality("");
     setPersonCount(1);
     setAges([""]);
-    setAgeError("");
+    setCompanyName("");
+    setCnpj("");
+    setLivesApprox("");
+    setMonthlyBudget("");
+    setStepTwoError("");
+    setHasActivePlan("");
+    setCurrentOperator("");
+    setCurrentSpend("");
+    setMigrationReason("");
+    setStepThreeError("");
     stepOneForm.reset();
-    stepTwoForm.reset();
+  }
+
+  function selectLivesRange(value: LivesRange) {
+    setLivesRange(value);
+    setStepTwoError("");
+    const cfg = rangeConfig(value);
+    if (cfg?.detailed) {
+      const start = cfg.min;
+      setPersonCount(start);
+      setAges((prev) => {
+        const next = [...prev];
+        if (start > next.length)
+          return [...next, ...Array<string>(start - next.length).fill("")];
+        return next.slice(0, start);
+      });
+    }
   }
 
   function changePersonCount(delta: number) {
-    const next = Math.max(1, personCount + delta);
+    if (!range) return;
+    const next = Math.min(range.max, Math.max(range.min, personCount + delta));
     setPersonCount(next);
     setAges((prev) => {
       if (next > prev.length)
         return [...prev, ...Array<string>(next - prev.length).fill("")];
       return prev.slice(0, next);
     });
-    setAgeError("");
+    setStepTwoError("");
   }
 
   function updateAge(index: number, value: string) {
     const digits = value.replace(/\D/g, "").slice(0, 3);
     setAges((prev) => prev.map((a, i) => (i === index ? digits : a)));
-    setAgeError("");
+    setStepTwoError("");
   }
 
   function onSubmitStepOne(values: StepOneData) {
@@ -156,34 +282,112 @@ export function QuoteStepper() {
     setStep(2);
   }
 
-  function onSubmitStepTwo(values: StepTwoData) {
-    if (!MODALITIES.some((item) => item.value === values.modality)) return;
-    if (ages.some((a) => a.trim() === "")) {
-      setAgeError("Informe a idade de todas as pessoas.");
+  function onSubmitStepTwo(e: React.FormEvent) {
+    e.preventDefault();
+    if (!range) {
+      setStepTwoError("Selecione para quantas vidas é o plano.");
       return;
     }
-    const invalidAge = ages.some((a) => {
-      const n = Number(a);
-      return isNaN(n) || n < 0 || n > 110;
-    });
-    if (invalidAge) {
-      setAgeError("Idades devem estar entre 0 e 110 anos.");
+    if (!companyName.trim()) {
+      setStepTwoError("Informe o nome da empresa.");
       return;
     }
-    setStepTwoData({
-      modality: values.modality as Modality,
-      personCount,
-      ages,
-    });
+    if (isDetailed) {
+      if (!modality) {
+        setStepTwoError("Selecione a modalidade do plano.");
+        return;
+      }
+      if (ages.some((a) => a.trim() === "")) {
+        setStepTwoError("Informe a idade de todas as pessoas.");
+        return;
+      }
+      if (
+        ages.some((a) => {
+          const n = Number(a);
+          return isNaN(n) || n < 0 || n > 110;
+        })
+      ) {
+        setStepTwoError("Idades devem estar entre 0 e 110 anos.");
+        return;
+      }
+      if (needsCnpjSmall && cnpj.replace(/\D/g, "").length !== 14) {
+        setStepTwoError("Informe um CNPJ válido (14 dígitos).");
+        return;
+      }
+      setStepTwoData({
+        livesRange: range.value,
+        companyName: companyName.trim(),
+        modality: modality as Modality,
+        personCount,
+        ages,
+        cnpj: needsCnpjSmall ? cnpj : undefined,
+      });
+    } else {
+      if (cnpj.replace(/\D/g, "").length !== 14) {
+        setStepTwoError("Informe um CNPJ válido (14 dígitos).");
+        return;
+      }
+      const lives = Number(livesApprox);
+      if (!livesApprox || isNaN(lives) || lives < range.min) {
+        setStepTwoError(
+          `Informe o número aproximado de vidas (mínimo ${range.min}).`,
+        );
+        return;
+      }
+      if (!monthlyBudget) {
+        setStepTwoError("Selecione a faixa de investimento mensal.");
+        return;
+      }
+      setStepTwoData({
+        livesRange: range.value,
+        companyName: companyName.trim(),
+        cnpj,
+        livesApprox,
+        monthlyBudget,
+      });
+    }
+    setStepTwoError("");
     setStep(3);
   }
 
-  async function handleQuoteRequest() {
+  function validateStepThree(): StepThreeValidatedData | null {
+    if (hasActivePlan === "") {
+      setStepThreeError("Informe se você já possui um plano ativo.");
+      return null;
+    }
+    if (hasActivePlan === "yes") {
+      if (!currentOperator.trim()) {
+        setStepThreeError("Informe qual é o plano/operadora atual.");
+        return null;
+      }
+      if (!currentSpend.trim()) {
+        setStepThreeError("Informe quanto você investe hoje no plano.");
+        return null;
+      }
+      if (!migrationReason) {
+        setStepThreeError("Selecione o principal motivo da migração.");
+        return null;
+      }
+      return {
+        hasActivePlan: true,
+        currentOperator: currentOperator.trim(),
+        currentSpend: currentSpend.trim(),
+        migrationReason,
+      };
+    }
+    return { hasActivePlan: false };
+  }
+
+  async function handleQuoteRequest(e: React.FormEvent) {
+    e.preventDefault();
+    const stepThreeData = validateStepThree();
+    if (!stepThreeData) return;
     if (!stepOneData || !stepTwoData) {
       setSubmitStatus("error");
       setSubmitMessage("Dados incompletos. Volte e preencha todos os campos.");
       return;
     }
+    setStepThreeError("");
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
     setSubmitStatus("loading");
@@ -195,9 +399,19 @@ export function QuoteStepper() {
           name: stepOneData.fullName,
           phone: stepOneData.phone,
           email: stepOneData.email,
+          livesRange: stepTwoData.livesRange,
+          companyName: stepTwoData.companyName ?? "",
           modality: modalityLabel(stepTwoData.modality),
-          personCount: stepTwoData.personCount,
-          ages: stepTwoData.ages,
+          personCount: stepTwoData.personCount ?? null,
+          ages: stepTwoData.ages ?? [],
+          cnpj: stepTwoData.cnpj ?? "",
+          livesApprox: stepTwoData.livesApprox ?? "",
+          monthlyBudget: stepTwoData.monthlyBudget ?? "",
+          hasActivePlan: stepThreeData.hasActivePlan,
+          currentOperator: stepThreeData.currentOperator ?? "",
+          currentSpend: stepThreeData.currentSpend ?? "",
+          migrationReason: stepThreeData.migrationReason ?? "",
+          firstPlan: !stepThreeData.hasActivePlan,
         }),
         signal: controller.signal,
       });
@@ -222,8 +436,6 @@ export function QuoteStepper() {
     }
   }
 
-  const s1Errors = stepOneForm.formState.errors;
-
   return (
     <section
       id="autoatendimento"
@@ -234,8 +446,7 @@ export function QuoteStepper() {
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-[#2f3c4c]/90">
         Preencha os dados em 3 etapas. Ao concluir, registramos sua solicitação
-        e a equipe entra em contato. Entraremos em contato o mais breve
-        possível.
+        e nossa equipe entra em contato o mais breve possível.
       </p>
 
       {/* Step indicators */}
@@ -280,7 +491,7 @@ export function QuoteStepper() {
 
       {/* Card */}
       <div className="mt-6 min-h-[480px] rounded-3xl border border-[#2f3c4c]/20 bg-[#f8f3e8]/90 p-5 shadow-lg backdrop-blur-sm md:p-8">
-        {/* ── Step 1 ── */}
+        {/* ── Step 1: Sobre você ── */}
         {step === 1 && (
           <form
             key="step-1"
@@ -298,17 +509,13 @@ export function QuoteStepper() {
                 aria-describedby="fullName-error"
                 {...stepOneForm.register("fullName")}
               />
-              <p
-                id="fullName-error"
-                role="alert"
-                className="mt-1 min-h-4 text-xs text-[#c5874a]"
-              >
+              <p id="fullName-error" role="alert" className={errorClass}>
                 {s1Errors.fullName?.message ?? ""}
               </p>
             </div>
 
             <div>
-              <Label htmlFor="phone">Telefone</Label>
+              <Label htmlFor="phone">Telefone (WhatsApp)</Label>
               <Input
                 id="phone"
                 name="phone"
@@ -324,11 +531,7 @@ export function QuoteStepper() {
                   })
                 }
               />
-              <p
-                id="phone-error"
-                role="alert"
-                className="mt-1 min-h-4 text-xs text-[#c5874a]"
-              >
+              <p id="phone-error" role="alert" className={errorClass}>
                 {s1Errors.phone?.message ?? ""}
               </p>
             </div>
@@ -345,11 +548,7 @@ export function QuoteStepper() {
                 aria-describedby="email-error"
                 {...stepOneForm.register("email")}
               />
-              <p
-                id="email-error"
-                role="alert"
-                className="mt-1 min-h-4 text-xs text-[#c5874a]"
-              >
+              <p id="email-error" role="alert" className={errorClass}>
                 {s1Errors.email?.message ?? ""}
               </p>
             </div>
@@ -395,126 +594,258 @@ export function QuoteStepper() {
           </form>
         )}
 
-        {/* ── Step 2 ── */}
+        {/* ── Step 2: Perfil do plano ── */}
         {step === 2 && (
           <form
             key="step-2"
             className="animate-step-in space-y-6"
-            onSubmit={stepTwoForm.handleSubmit(onSubmitStepTwo)}
+            onSubmit={onSubmitStepTwo}
           >
-            {/* Contador de pessoas */}
             <div>
-              <Label>Quantas pessoas serão incluídas no plano?</Label>
+              <Label id="lives-label">Para quantas vidas é o plano?</Label>
               <p className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
-                Informe o número total de vidas que serão cobertas, incluindo
-                titulares e dependentes. Quanto mais vidas, melhores condições
-                podemos oferecer.
+                Atendemos empresas com CNPJ ativo, a partir de 2 vidas. Quanto
+                mais vidas, melhores as condições que conseguimos negociar.
               </p>
-              <div className="mt-3 flex items-center gap-4">
-                <button
-                  type="button"
-                  aria-label="Diminuir número de pessoas"
-                  onClick={() => changePersonCount(-1)}
-                  disabled={personCount <= 1}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#2f3c4c]/25 bg-[#fffdf8] text-lg font-semibold transition-colors hover:bg-[#2f3c4c]/8 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  −
-                </button>
-                <span
-                  aria-live="polite"
-                  aria-atomic="true"
-                  className="w-8 text-center text-xl font-semibold tabular-nums"
-                >
-                  {personCount}
-                </span>
-                <button
-                  type="button"
-                  aria-label="Aumentar número de pessoas"
-                  onClick={() => changePersonCount(1)}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#2f3c4c]/25 bg-[#fffdf8] text-lg font-semibold transition-colors hover:bg-[#2f3c4c]/8"
-                >
-                  +
-                </button>
-                <span className="text-sm text-[#2f3c4c]/75">
-                  {personCount === 1 ? "1 pessoa" : `${personCount} pessoas`}
-                </span>
-              </div>
-            </div>
-
-            {/* Idades */}
-            <div>
-              <Label>Qual a idade de cada pessoa?</Label>
-              <p className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
-                Informe a idade de cada pessoa que será incluída no plano. A
-                idade influencia diretamente no valor da mensalidade.
-              </p>
-              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-                {ages.map((age, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <Input
-                      type="text"
-                      inputMode="numeric"
-                      placeholder="Idade"
-                      value={age}
-                      onChange={(e) => updateAge(i, e.target.value)}
-                      aria-label={`Idade da pessoa ${i + 1}`}
-                      aria-invalid={
-                        ageError !== "" &&
-                        (age.trim() === "" || Number(age) > 110)
-                      }
-                    />
-                    <span className="shrink-0 text-sm text-[#2f3c4c]/75">
-                      anos
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <p
-                id="age-error"
-                role="alert"
-                className="mt-1 min-h-4 text-xs text-[#c5874a]"
-              >
-                {ageError}
-              </p>
-            </div>
-
-            {/* Modalidade */}
-            <div>
-              <Label id="modality-label">Modalidade</Label>
               <div
                 role="radiogroup"
-                aria-labelledby="modality-label"
-                className="mt-2 grid gap-3 md:grid-cols-2"
+                aria-labelledby="lives-label"
+                className="mt-3 grid gap-3 sm:grid-cols-2 md:grid-cols-3"
               >
-                {MODALITIES.map((item) => (
+                {LIVES_RANGES.map((item) => (
                   <label
                     key={item.value}
-                    className={[
-                      "flex cursor-pointer flex-col rounded-2xl border p-3 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#ae905e] has-[:focus-visible]:ring-offset-1 md:p-4",
-                      watchedModality === item.value
-                        ? "border-[#8fa286] bg-[#8fa286]/15"
-                        : "border-[#2f3c4c]/20 bg-[#fffdf8]",
-                    ].join(" ")}
+                    className={cardClass(livesRange === item.value)}
                   >
                     <input
                       type="radio"
+                      name="livesRange"
                       value={item.value}
+                      checked={livesRange === item.value}
+                      onChange={() => selectLivesRange(item.value)}
                       className="sr-only"
-                      {...stepTwoForm.register("modality")}
                     />
-                    <p className="text-sm font-semibold">{item.title}</p>
-                    <p className="mt-1.5 text-xs leading-relaxed text-[#2f3c4c]/80">
+                    <span className="text-sm font-semibold">{item.title}</span>
+                    <span className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
                       {item.description}
-                    </p>
+                    </span>
                   </label>
                 ))}
               </div>
-              <p role="alert" className="mt-1 min-h-4 text-xs text-[#c5874a]">
-                {stepTwoForm.formState.errors.modality?.message ?? ""}
-              </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
+            {range && (
+              <div>
+                <Label htmlFor="companyName">Nome da empresa</Label>
+                <Input
+                  id="companyName"
+                  type="text"
+                  autoComplete="organization"
+                  placeholder="Razão social ou nome fantasia"
+                  className="mt-1"
+                  value={companyName}
+                  onChange={(e) => {
+                    setCompanyName(e.target.value);
+                    setStepTwoError("");
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Perfil detalhado: até 10 vidas */}
+            {isDetailed && range && (
+              <>
+                <div>
+                  <Label id="modality-label">Modalidade</Label>
+                  <div
+                    role="radiogroup"
+                    aria-labelledby="modality-label"
+                    className="mt-2 grid gap-3 md:grid-cols-2"
+                  >
+                    {MODALITIES.map((item) => (
+                      <label
+                        key={item.value}
+                        className={cardClass(modality === item.value)}
+                      >
+                        <input
+                          type="radio"
+                          name="modality"
+                          value={item.value}
+                          checked={modality === item.value}
+                          onChange={() => {
+                            setModality(item.value);
+                            setStepTwoError("");
+                          }}
+                          className="sr-only"
+                        />
+                        <span className="text-sm font-semibold">
+                          {item.title}
+                        </span>
+                        <span className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
+                          {item.description}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {range.max > 1 && (
+                  <div>
+                    <Label>Quantas pessoas exatamente?</Label>
+                    <div className="mt-3 flex items-center gap-4">
+                      <button
+                        type="button"
+                        aria-label="Diminuir número de pessoas"
+                        onClick={() => changePersonCount(-1)}
+                        disabled={personCount <= range.min}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#2f3c4c]/25 bg-[#fffdf8] text-lg font-semibold transition-colors hover:bg-[#2f3c4c]/8 disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        −
+                      </button>
+                      <span
+                        aria-live="polite"
+                        aria-atomic="true"
+                        className="w-8 text-center text-xl font-semibold tabular-nums"
+                      >
+                        {personCount}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label="Aumentar número de pessoas"
+                        onClick={() => changePersonCount(1)}
+                        disabled={personCount >= range.max}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#2f3c4c]/25 bg-[#fffdf8] text-lg font-semibold transition-colors hover:bg-[#2f3c4c]/8 disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        +
+                      </button>
+                      <span className="text-sm text-[#2f3c4c]/75">
+                        {personCount === 1
+                          ? "1 pessoa"
+                          : `${personCount} pessoas`}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <Label>Qual a idade de cada pessoa?</Label>
+                  <p className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
+                    A idade influencia diretamente no valor da mensalidade.
+                  </p>
+                  <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                    {ages.map((age, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <Input
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="Idade"
+                          value={age}
+                          onChange={(e) => updateAge(i, e.target.value)}
+                          aria-label={`Idade da pessoa ${i + 1}`}
+                        />
+                        <span className="shrink-0 text-sm text-[#2f3c4c]/75">
+                          anos
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {needsCnpjSmall && (
+                  <div>
+                    <Label htmlFor="cnpj-small">CNPJ da empresa</Label>
+                    <Input
+                      id="cnpj-small"
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="00.000.000/0000-00"
+                      className="mt-1"
+                      value={cnpj}
+                      onChange={(e) => {
+                        setCnpj(formatCnpj(e.target.value));
+                        setStepTwoError("");
+                      }}
+                    />
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Perfil corporativo: 11+ vidas */}
+            {range && !isDetailed && (
+              <>
+                <div>
+                  <Label htmlFor="cnpj-corp">CNPJ da empresa</Label>
+                  <Input
+                    id="cnpj-corp"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="00.000.000/0000-00"
+                    className="mt-1"
+                    value={cnpj}
+                    onChange={(e) => {
+                      setCnpj(formatCnpj(e.target.value));
+                      setStepTwoError("");
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="livesApprox">
+                    Número aproximado de vidas
+                  </Label>
+                  <p className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
+                    Titulares e dependentes que devem entrar no plano.
+                  </p>
+                  <Input
+                    id="livesApprox"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder={`Ex.: ${range.min + 4}`}
+                    className="mt-1 max-w-40"
+                    value={livesApprox}
+                    onChange={(e) => {
+                      setLivesApprox(
+                        e.target.value.replace(/\D/g, "").slice(0, 5),
+                      );
+                      setStepTwoError("");
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="monthlyBudget">
+                    Investimento mensal estimado em saúde
+                  </Label>
+                  <p className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
+                    Quanto a empresa investe hoje (ou pretende investir) no
+                    benefício.
+                  </p>
+                  <select
+                    id="monthlyBudget"
+                    className={selectClass}
+                    value={monthlyBudget}
+                    onChange={(e) => {
+                      setMonthlyBudget(e.target.value);
+                      setStepTwoError("");
+                    }}
+                  >
+                    <option value="">Selecione uma faixa</option>
+                    {BUDGET_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
+
+            <p role="alert" className={errorClass}>
+              {stepTwoError}
+            </p>
+
+            <div className="flex flex-wrap gap-3">
               <Button
                 type="button"
                 variant="outline"
@@ -529,107 +860,196 @@ export function QuoteStepper() {
           </form>
         )}
 
-        {/* ── Step 3 ── */}
-        {step === 3 &&
-          stepOneData &&
-          stepTwoData &&
-          (submitStatus === "success" ? (
-            <div
-              key="step-3-success"
-              className="animate-step-in flex min-h-[420px] flex-col items-center justify-center gap-5 text-center"
-            >
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#8fa286] text-3xl text-white">
-                ✓
+        {/* ── Step 3: Situação atual + envio ── */}
+        {step === 3 && submitStatus !== "success" && (
+          <form
+            key="step-3"
+            className="animate-step-in space-y-6"
+            onSubmit={handleQuoteRequest}
+          >
+            <div>
+              <Label id="active-plan-label">
+                Você (ou sua empresa) já possui plano de saúde ativo?
+              </Label>
+              <div
+                role="radiogroup"
+                aria-labelledby="active-plan-label"
+                className="mt-2 grid gap-3 sm:grid-cols-2"
+              >
+                <label className={cardClass(hasActivePlan === "yes")}>
+                  <input
+                    type="radio"
+                    name="hasActivePlan"
+                    value="yes"
+                    checked={hasActivePlan === "yes"}
+                    onChange={() => {
+                      setHasActivePlan("yes");
+                      setStepThreeError("");
+                    }}
+                    className="sr-only"
+                  />
+                  <span className="text-sm font-semibold">
+                    Sim, já tenho plano
+                  </span>
+                  <span className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
+                    Quero comparar, reduzir custo ou migrar.
+                  </span>
+                </label>
+                <label className={cardClass(hasActivePlan === "no")}>
+                  <input
+                    type="radio"
+                    name="hasActivePlan"
+                    value="no"
+                    checked={hasActivePlan === "no"}
+                    onChange={() => {
+                      setHasActivePlan("no");
+                      setStepThreeError("");
+                    }}
+                    className="sr-only"
+                  />
+                  <span className="text-sm font-semibold">
+                    Não, será o primeiro plano
+                  </span>
+                  <span className="mt-1 text-xs leading-relaxed text-[#2f3c4c]/75">
+                    Quero contratar pela primeira vez.
+                  </span>
+                </label>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold">Solicitação enviada!</h3>
-                <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#2f3c4c]/75">
-                  Nossa equipe retornará o mais breve possível com as melhores
-                  opções para o seu perfil.
+            </div>
+
+            {hasActivePlan === "yes" && (
+              <>
+                <div>
+                  <Label htmlFor="currentOperator">
+                    Qual é o plano/operadora atual?
+                  </Label>
+                  <Input
+                    id="currentOperator"
+                    type="text"
+                    placeholder="Ex.: Unimed, Bradesco Saúde, Amil..."
+                    className="mt-1"
+                    value={currentOperator}
+                    onChange={(e) => {
+                      setCurrentOperator(e.target.value);
+                      setStepThreeError("");
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="currentSpend">
+                    Quanto investe hoje no plano?
+                  </Label>
+                  <Input
+                    id="currentSpend"
+                    type="text"
+                    placeholder="Ex.: R$ 2.500/mês"
+                    className="mt-1 max-w-60"
+                    value={currentSpend}
+                    onChange={(e) => {
+                      setCurrentSpend(e.target.value);
+                      setStepThreeError("");
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="migrationReason">
+                    Principal motivo para buscar mudança
+                  </Label>
+                  <select
+                    id="migrationReason"
+                    className={selectClass}
+                    value={migrationReason}
+                    onChange={(e) => {
+                      setMigrationReason(e.target.value);
+                      setStepThreeError("");
+                    }}
+                  >
+                    <option value="">Selecione o motivo</option>
+                    {MIGRATION_REASONS.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
+
+            {/* Resumo */}
+            {stepOneData && stepTwoData && (
+              <div className="rounded-2xl border border-[#2f3c4c]/15 bg-[#fffdf8] p-4 text-sm leading-relaxed">
+                <p className="font-semibold">Resumo da solicitação</p>
+                <p className="mt-1 text-[#2f3c4c]/85">
+                  {stepOneData.fullName} · {stepOneData.phone} ·{" "}
+                  {stepOneData.email}
+                </p>
+                <p className="text-[#2f3c4c]/85">
+                  {stepTwoData.companyName
+                    ? `${stepTwoData.companyName} · `
+                    : ""}
+                  {rangeConfig(stepTwoData.livesRange)?.title}
+                  {stepTwoData.modality
+                    ? ` · ${modalityLabel(stepTwoData.modality)}`
+                    : ""}
+                  {stepTwoData.personCount
+                    ? ` · ${stepTwoData.personCount} pessoa(s), idades: ${stepTwoData.ages?.join(", ")}`
+                    : ""}
+                  {stepTwoData.livesApprox
+                    ? ` · ~${stepTwoData.livesApprox} vidas`
+                    : ""}
+                  {stepTwoData.monthlyBudget
+                    ? ` · ${stepTwoData.monthlyBudget}`
+                    : ""}
+                  {stepTwoData.cnpj ? ` · CNPJ ${stepTwoData.cnpj}` : ""}
                 </p>
               </div>
-              <a
-                href={toWhatsappUrl()}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#8fa286] bg-[#8fa286]/15 px-6 py-3 font-semibold text-[#2f3c4c] transition-colors hover:bg-[#8fa286]/30"
-              >
-                Falar com especialista
-              </a>
-              <button
+            )}
+
+            <p role="alert" className={errorClass}>
+              {stepThreeError ||
+                (submitStatus === "error" ? submitMessage : "")}
+            </p>
+
+            <div className="flex flex-wrap gap-3">
+              <Button
                 type="button"
-                onClick={resetAll}
-                className="text-sm text-[#2f3c4c]/60 underline underline-offset-2 transition-colors hover:text-[#2f3c4c]"
+                variant="outline"
+                onClick={() => setStep(2)}
               >
-                Fazer nova cotação
-              </button>
+                Voltar
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={submitStatus === "loading"}
+              >
+                {submitStatus === "loading"
+                  ? "Enviando..."
+                  : "Solicitar Cotação"}
+              </Button>
             </div>
-          ) : (
-            <div key="step-3" className="animate-step-in space-y-5">
-              {/* Resumo */}
-              <div className="grid gap-3 rounded-2xl bg-[#fffdf8] p-4 text-sm md:grid-cols-2">
-                <p>
-                  <strong>Nome:</strong> {stepOneData.fullName}
-                </p>
-                <p>
-                  <strong>Telefone:</strong> {stepOneData.phone}
-                </p>
-                <p>
-                  <strong>E-mail:</strong> {stepOneData.email}
-                </p>
-                <p>
-                  <strong>Pessoas:</strong> {stepTwoData.personCount}
-                </p>
-                <p>
-                  <strong>Idades:</strong> {stepTwoData.ages.join(", ")} anos
-                </p>
-                <p className="md:col-span-2">
-                  <strong>Modalidade:</strong>{" "}
-                  {modalityLabel(stepTwoData.modality)}
-                </p>
-              </div>
+          </form>
+        )}
 
-              {/* Aviso de contato */}
-              <div className="rounded-2xl border border-[#ae905e]/60 bg-[#ae905e]/15 p-4 text-sm">
-                <p className="leading-relaxed text-[#2f3c4c]/85">
-                  Após a solicitação, nossa equipe entrará em contato via
-                  WhatsApp o mais breve possível.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setStep(2)}
-                  disabled={submitStatus === "loading"}
-                >
-                  Voltar
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleQuoteRequest}
-                  disabled={submitStatus === "loading"}
-                  variant="primary"
-                  className="min-w-44"
-                >
-                  {submitStatus === "loading"
-                    ? "Enviando..."
-                    : "Solicitar cotação"}
-                </Button>
-              </div>
-
-              {submitStatus === "error" && (
-                <p
-                  role="alert"
-                  aria-live="polite"
-                  className="text-sm text-[#c5874a]"
-                >
-                  {submitMessage}
-                </p>
-              )}
+        {/* ── Sucesso ── */}
+        {step === 3 && submitStatus === "success" && (
+          <div className="animate-step-in flex min-h-[400px] flex-col items-center justify-center gap-4 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#8fa286] text-3xl">
+              ✓
             </div>
-          ))}
+            <h3 className="text-xl font-semibold">Solicitação registrada!</h3>
+            <p className="max-w-md text-sm leading-relaxed text-[#2f3c4c]/85">
+              Recebemos seus dados e nossa equipe vai preparar sua cotação
+              personalizada. Entraremos em contato pelo WhatsApp ou e-mail o
+              mais breve possível.
+            </p>
+            <Button type="button" variant="outline" onClick={resetAll}>
+              Fazer nova solicitação
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
