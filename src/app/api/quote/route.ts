@@ -4,9 +4,19 @@ const quoteRequestSchema = z.object({
   name: z.string().min(3),
   phone: z.string().min(10),
   email: z.string().email(),
-  modality: z.string().min(2),
-  personCount: z.number().int().min(1),
-  ages: z.array(z.string()).min(1),
+  livesRange: z.string().min(1),
+  companyName: z.string().optional().default(""),
+  modality: z.string().optional().default(""),
+  personCount: z.number().int().min(1).nullable().optional(),
+  ages: z.array(z.string()).optional().default([]),
+  cnpj: z.string().optional().default(""),
+  livesApprox: z.string().optional().default(""),
+  monthlyBudget: z.string().optional().default(""),
+  hasActivePlan: z.boolean(),
+  currentOperator: z.string().optional().default(""),
+  currentSpend: z.string().optional().default(""),
+  migrationReason: z.string().optional().default(""),
+  firstPlan: z.boolean().optional().default(false),
 });
 
 function isAllowedOrigin(origin: string) {
@@ -23,19 +33,14 @@ function isAllowedOrigin(origin: string) {
 export async function POST(request: Request) {
   const origin = request.headers.get("origin");
   if (origin && !isAllowedOrigin(origin)) {
-    return Response.json({ error: "Origem não permitida." }, { status: 403 });
+    return Response.json({ error: "Origem nao permitida." }, { status: 403 });
   }
 
   try {
     const payload = quoteRequestSchema.parse(await request.json());
-    const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
-
-    if (!webhookUrl) {
-      return Response.json(
-        { error: "GOOGLE_SHEETS_WEBHOOK_URL não configurada." },
-        { status: 500 },
-      );
-    }
+    const webhookUrl =
+      process.env.QUOTE_WEBHOOK_URL ??
+      "https://arvor-n8n-editor.jmaqs0.easypanel.host/webhook/arvorin-cotacao";
 
     const response = await fetch(webhookUrl, {
       method: "POST",
@@ -59,7 +64,7 @@ export async function POST(request: Request) {
     if (!response.ok) {
       console.error("[quote] webhook error:", response.status);
       return Response.json(
-        { error: "Falha ao registrar solicitação no Google Sheets." },
+        { error: "Falha ao registrar a solicitacao." },
         { status: 502 },
       );
     }
@@ -68,7 +73,7 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error("[quote] error:", err);
     return Response.json(
-      { error: "Não foi possível processar a solicitação." },
+      { error: "Nao foi possivel processar a solicitacao." },
       { status: 400 },
     );
   }
